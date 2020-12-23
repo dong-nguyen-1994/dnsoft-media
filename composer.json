@@ -1,0 +1,36 @@
+{
+    "name": "dnsoft/media",
+    "description": "Dnsoft Media",
+    "keywords": [
+        "dnsoft"
+    ],
+    "homepage": "https://dnguyen.xyz",
+    "support" : {
+        "email" : "dong.joseph2810@gmail.com"
+    },
+    "authors": [
+        {
+            "name": "Dong Nguyen",
+            "email": "dong.joseph2810@gmail.com"
+        }
+    ],
+    "type": "library",
+
+    "autoload": {
+        "psr-4": {
+            "Dnsoft\\Media\\": "/src"
+        },
+        "files": [
+            "helpers/helpers.php"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Dnsoft\\Media\\MediaServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
