@@ -178,14 +178,4 @@ class MediaController extends Controller
         Session::flash('success', __('media::media.notification.deleted'));
         return response()->json(['success' => 200]);
     }
-
-    public function froalaLoadImages(Request $request)
-    {
-        $items = $this->mediaRepository->all();
-
-        FroalaMediaResource::withoutWrapping();
-        $data = FroalaMediaResource::collection($items);
-
-        return response()->json($data);
-    }
 }
