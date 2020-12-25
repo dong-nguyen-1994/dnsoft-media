@@ -38,10 +38,6 @@ class UploadController extends Controller
         }
 
         switch ($request->input('response')) {
-            case 'froala':
-                return $this->renderFroala($medias);
-                break;
-
             case 'tinymce':
                 return $this->renderTinymce($medias);
                 break;
@@ -56,16 +52,6 @@ class UploadController extends Controller
         return response()->json([
             'success' => true,
             'files'   => MediaResource::collection($medias),
-        ]);
-    }
-
-    public function renderFroala(Collection $medias)
-    {
-        return response()->json([
-            'media-id' => $medias->first()->id,
-            'name'     => $medias->first()->name,
-            'link'     => $medias->first()->getUrl(),
-            'thumb'    => $medias->first()->getUrl(),
         ]);
     }
 

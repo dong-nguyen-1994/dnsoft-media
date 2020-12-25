@@ -9,7 +9,6 @@ use Illuminate\Support\ServiceProvider;
 use Intervention\Image\Image;
 use Dnsoft\Acl\Facades\Permission;
 use Dnsoft\Core\Events\CoreAdminMenuRegistered;
-use Dnsoft\Core\Facades\AdminMenu;
 use Dnsoft\Media\Events\MediaUploadedEvent;
 use Dnsoft\Media\Facades\Conversion;
 use Dnsoft\Media\Jobs\PerformConversions;
@@ -53,7 +52,7 @@ class MediaServiceProvider extends ServiceProvider
 
         $this->publishes([
             __DIR__ . '/../public' => public_path('vendor/media'),
-        ], 'newnet-assets');
+        ], 'dnsoft-assets');
 
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
 
@@ -90,9 +89,8 @@ class MediaServiceProvider extends ServiceProvider
 
     protected function loadRoutes()
     {
-        Route::middleware(config('core.admin_middleware'))
-            ->domain(config('core.admin_domain'))
-            ->prefix(config('core.admin_prefix'))
+        Route::middleware(['web', 'admin.auth'])
+            ->prefix('admin')
             ->group(__DIR__.'/../routes/admin.php');
     }
 
@@ -105,14 +103,14 @@ class MediaServiceProvider extends ServiceProvider
     private function registerAdminMenus()
     {
         Event::listen(CoreAdminMenuRegistered::class, function () {
-            AdminMenu::addItem(__('media::media.menu'), [
-                'id'         => 'media',
-                'parent'     => 'system_root',
-                'route'      => 'media.admin.media.index',
-                'permission' => 'media.admin.index',
-                'icon'       => 'fas fa-photo-video',
-                'order'      => 5,
-            ]);
+//            AdminMenu::addItem(__('media::media.menu'), [
+//                'id'         => 'media',
+//                'parent'     => 'system_root',
+//                'route'      => 'media.admin.media.index',
+//                'permission' => 'media.admin.index',
+//                'icon'       => 'fas fa-photo-video',
+//                'order'      => 5,
+//            ]);
         });
     }
 

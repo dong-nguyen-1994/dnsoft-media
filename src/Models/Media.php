@@ -5,7 +5,7 @@ namespace Dnsoft\Media\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Dnsoft\Core\Support\Traits\CacheableTrait;
+use Dnsoft\Core\Traits\CacheableTrait;
 
 /**
  * Dnsoft\Media\Models\Media

@@ -8,6 +8,9 @@
     "support" : {
         "email" : "dong.joseph2810@gmail.com"
     },
+    "require": {
+        "intervention/image": "^2.5"
+    },
     "authors": [
         {
             "name": "Dong Nguyen",
