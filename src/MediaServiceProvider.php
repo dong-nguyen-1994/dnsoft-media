@@ -52,7 +52,7 @@ class MediaServiceProvider extends ServiceProvider
 
         $this->publishes([
             __DIR__ . '/../public' => public_path('vendor/media'),
-        ], 'dnsoft-assets');
+        ], 'media');
 
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
 
