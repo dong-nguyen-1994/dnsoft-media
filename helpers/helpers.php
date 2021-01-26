@@ -1,16 +1,18 @@
 <?php
 
+use Dnsoft\Media\Models\Media;
 use Dnsoft\Media\Repositories\MediaRepositoryInterface;
 
-if (!function_exists('get_media')) {
+if (!function_exists('get_media'))
+{
     /**
      * Get Media
      *
      * @param $mediaId
      *
-     * @return \Dnsoft\Media\Models\Media|null
+     * @return Media|null
      */
-    function get_media($mediaId)
+    function get_media($mediaId): ?Media
     {
         if ($mediaId) {
             return app(MediaRepositoryInterface::class)->find($mediaId);
@@ -21,8 +23,9 @@ if (!function_exists('get_media')) {
 
 }
 
-if (!function_exists('imageProxy')){
-    function imageProxy($url, $width, $height, $format = 'jpg', $quality = 80)
+if (!function_exists('imageProxy'))
+{
+    function imageProxy($url, $width, $height, $format = 'jpg', $quality = 80): string
     {
         if (config('media.imageproxy.enable') === true){
             $urlCdn = config('media.imageproxy.server');

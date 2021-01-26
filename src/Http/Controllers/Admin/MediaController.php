@@ -121,11 +121,11 @@ class MediaController extends Controller
         if ($file->isOfType('image')) {
             $src = $file->getUrl();
         } else if ($file->type == 'video') {
-            $src = asset('vendor/media/images/types/video.png');
+            $src = asset('vendor/media/admin/images/types/video.png');
         } else if ($file->type == 'audio') {
-            $src = asset('vendor/media/images/types/mp3.png');
+            $src = asset('vendor/media/admin/images/types/mp3.png');
         } else {
-            $src = asset('vendor/media/images/types/text.png');
+            $src = asset('vendor/media/admin/images/types/text.png');
         }
 
         return response()->json(['file' => $file, 'src' => $src, 'modelAttached' => $modelAttached]);

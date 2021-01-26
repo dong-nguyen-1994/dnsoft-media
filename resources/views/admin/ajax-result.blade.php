@@ -58,11 +58,11 @@
                     @if ($type[0] == 'image')
                         <img width="130px" height="130px" style="padding: 15px;" src="{{ $media->getUrl('thumb') }}">
                     @elseif ($type[0] == 'audio')
-                        <img width="130px" height="130px" style="padding: 15px;" src="{{ asset('vendor/media/images/types/mp3.png') }}">
+                        <img width="130px" height="130px" style="padding: 15px;" src="{{ asset('vendor/media/admin/images/types/mp3.png') }}">
                     @elseif ($type[0] == 'video')
-                        <img width="130px" height="130px" style="padding: 15px;" src="{{ asset('vendor/media/images/types/video.png') }}">
+                        <img width="130px" height="130px" style="padding: 15px;" src="{{ asset('vendor/media/admin/images/types/video.png') }}">
                     @else
-                        <img width="130px" height="130px" style="padding: 15px;" src="{{ asset('vendor/media/images/types/text.png')}}">
+                        <img width="130px" height="130px" style="padding: 15px;" src="{{ asset('vendor/admin/media/images/types/text.png')}}">
                     @endif
                     <a style="text-align: center !important;" href="{{ $media->getUrl() }}" target="_blank">{{$media->name}}</a>
                 </a>

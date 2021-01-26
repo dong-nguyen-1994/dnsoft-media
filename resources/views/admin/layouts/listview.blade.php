@@ -64,11 +64,11 @@
                     @if ($type[0] == 'image')
                         <img width="70px" height="70px" style="margin: 10px;" src="{{ $media->getUrl('thumb') }}">
                     @elseif ($type[0] == 'audio')
-                        <img width="70px" height="70px" style="margin: 10px;" src="{{ asset('vendor/media/images/types/mp3.png') }}">
+                        <img width="70px" height="70px" style="margin: 10px;" src="{{ asset('vendor/media/admin/images/types/mp3.png') }}">
                     @elseif ($type[0] == 'video')
-                        <img width="70px" height="70px" style="margin: 10px;" src="{{ asset('vendor/media/images/types/video.png')}}">
+                        <img width="70px" height="70px" style="margin: 10px;" src="{{ asset('vendor/media/admin/images/types/video.png')}}">
                     @else
-                        <img width="70px" height="70px" style="margin: 10px;" src="{{ asset('vendor/media/images/types/text.png') }}">
+                        <img width="70px" height="70px" style="margin: 10px;" src="{{ asset('vendor/media/admin/images/types/text.png') }}">
                     @endif
                 </a>
             </td>
