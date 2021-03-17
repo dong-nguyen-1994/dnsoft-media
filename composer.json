@@ -33,6 +33,5 @@
                 "Dnsoft\\Media\\MediaServiceProvider"
             ]
         }
-    },
-    "prefer-stable": true
+    }
 }
