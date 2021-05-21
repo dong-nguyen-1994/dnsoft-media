@@ -111,7 +111,9 @@ class MediaServiceProvider extends ServiceProvider
         });
     }
 
-    public function registerBlade(){
+    public function registerBlade()
+    {
         Blade::include('media::admin.modals.tag-modal', 'modalMedia');
+        Blade::include('media::admin.forms.file-manager', 'fileManager');
     }
 }
