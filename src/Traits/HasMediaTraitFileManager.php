@@ -7,27 +7,6 @@ use Illuminate\Support\Facades\Auth;
 
 trait HasMediaTraitFileManager
 {
-    protected $mediaAttributes = [];
-
-    public static function bootHasMediaTraitFileManager()
-    {
-        static::deleting(function (self $model) {
-//            if ($model->forceDeleteMedia()) {
-//                foreach ($model->media as $media) {
-//                    $media->delete();
-//                }
-//            } else {
-//                $model->media()->detach();
-//            }
-        });
-
-        static::saved(function (self $model) {
-            foreach ($model->mediaAttributes as $value) {
-                $model->attachMediaFileManager($value);
-            }
-        });
-    }
-
     /**
      * Attach media to the specified group.
      * @param mixed $media
@@ -42,13 +21,15 @@ trait HasMediaTraitFileManager
             $values = explode(',', $value);
             foreach ($values as $v) {
                 $fileName = explode('/', $v);
-                $media = MediaFileManager::create([
-                    'file_name' => $fileName[count($fileName) - 1],
-                    'url' => $v,
-                ]);
-                $media->table()->associate($this);
-                $media->author()->associate(Auth::guard('admin')->user());
-                $media->save();
+                if ($v) {
+                    $media = MediaFileManager::create([
+                        'file_name' => $fileName[count($fileName) - 1],
+                        'url' => $v,
+                    ]);
+                    $media->table()->associate($this);
+                    $media->author()->associate(Auth::guard('admin')->user());
+                    $media->save();
+                }
             }
         }
     }
@@ -74,15 +55,15 @@ trait HasMediaTraitFileManager
     public function getAllMedias($convension = 'thumbs')
     {
         $medias = MediaFileManager::select('url', 'file_name')->where([
-                'table_type' => get_class($this),
-                'table_id' => $this->id,
-            ])->get();
+            'table_type' => get_class($this),
+            'table_id' => $this->id,
+        ])->get();
         $arrGallery = [];
         if ($medias) {
             foreach ($medias as $media) {
                 if ($convension == 'thumbs') {
                     $url = $this->analyticUrl($media->url);
-                    $url = $url.'/'.$convension.'/'.$media->file_name;
+                    $url = $url . '/' . $convension . '/' . $media->file_name;
                 } else {
                     $url = $media->url;
                 }
@@ -99,5 +80,31 @@ trait HasMediaTraitFileManager
         $urls = explode('/', $url);
         unset($urls[count($urls) - 1]);
         return implode('/', $urls);
+    }
+
+    public function attachSeoMeta($value, $group)
+    {
+        if ($value) {
+            MediaFileManager::where(['table_type' => get_class($this), 'table_id' => $this->id, 'group' => $group])->delete();
+            $fileName = explode('/', $value);
+            $media = MediaFileManager::create([
+                'file_name' => $fileName[count($fileName) - 1],
+                'url' => $value,
+                'group' => $group,
+            ]);
+            $media->table()->associate($this);
+            $media->author()->associate(Auth::guard('admin')->user());
+            $media->save();
+        }
+    }
+
+    public function getSeoMedia($group)
+    {
+        $media = MediaFileManager::select('url', 'file_name')->where([
+            'table_type' => get_class($this),
+            'table_id' => $this->id,
+            'group' => $group
+        ])->first();
+//        dd($media);
     }
 }

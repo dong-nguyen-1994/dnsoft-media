@@ -18,4 +18,14 @@ class MediaFileManager extends Model
         'table_type',
         'group',
     ];
+
+    public function author()
+    {
+        return $this->morphTo();
+    }
+
+    public function table()
+    {
+        return $this->morphTo();
+    }
 }

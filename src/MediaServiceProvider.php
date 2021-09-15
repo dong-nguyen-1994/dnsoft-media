@@ -92,6 +92,11 @@ class MediaServiceProvider extends ServiceProvider
         Route::middleware(['web', 'admin.auth'])
             ->prefix('admin')
             ->group(__DIR__.'/../routes/admin.php');
+
+//        Route::middleware(['web'])
+//            ->group(__DIR__.'/../routes/web.php');
+
+//        Route::middleware(['web'])->group('./../routes/web.php');
     }
 
     protected function registerPermissions()
@@ -104,10 +109,6 @@ class MediaServiceProvider extends ServiceProvider
     {
         Event::listen(CoreAdminMenuRegistered::class, function ($menu) {
 
-            $menu->add(__('core::core.menu.media'), [
-                'route' => 'media.admin.media.index',
-                'parent' => $menu->system->id
-            ])->data('order', 9)->prepend('<i class="far fa-images"></i>');
         });
     }
 
@@ -115,5 +116,6 @@ class MediaServiceProvider extends ServiceProvider
     {
         Blade::include('media::admin.modals.tag-modal', 'modalMedia');
         Blade::include('media::admin.forms.file-manager', 'fileManager');
+        Blade::include('media::admin.forms.single-file', 'singleFile');
     }
 }
