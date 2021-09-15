@@ -1,8 +1,14 @@
 @if ($type == 'image')
-    @php($image = object_get($item, $name))
-
+    @if ($item && $name == 'seometa[og_image]')
+        @php($image = $item->seometa ? $item->seometa['og_image'] : null)
+    @elseif($item && $name == 'seometa[twitter_image]')
+        @php($image = $item->seometa ? $item->seometa['twitter_image'] : null)
+    @else
+        @php($image = object_get($item, $name))
+    @endif
     @if ($image)
-        <div class="single-holder-{{ $id }}" style="margin-top:15px;max-height:100px; margin-bottom: 10px">
+        <div class="single-holder-{{ $id }}" style="margin-top:15px;max-height:100px; margin-bottom: 10px"></div>
+        <div class="single-holder" style="margin-top:15px;max-height:100px; margin-bottom: 10px">
             <span class="close" data-single-image="{{ $image }}">&times;</span>
             <img src="{{ $image }}" style="height: 5rem;" class="mr-2">
         </div>

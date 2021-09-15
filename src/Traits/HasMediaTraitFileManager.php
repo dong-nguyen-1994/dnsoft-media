@@ -43,7 +43,7 @@ trait HasMediaTraitFileManager
         if ($media) {
             if ($convension == 'thumbs') {
                 $url = $this->analyticUrl($media->url);
-                $url = $url.'/'.$convension.'/'.$media->file_name;
+                $url = $url . '/' . $convension . '/' . $media->file_name;
             } else {
                 $url = $media->url;
             }
@@ -98,13 +98,22 @@ trait HasMediaTraitFileManager
         }
     }
 
-    public function getSeoMedia($group)
+    public function getSeoMedia($group, $convension = 'thumbs')
     {
         $media = MediaFileManager::select('url', 'file_name')->where([
             'table_type' => get_class($this),
             'table_id' => $this->id,
             'group' => $group
         ])->first();
-//        dd($media);
+        if ($media) {
+            if ($convension == 'thumbs') {
+                $url = $this->analyticUrl($media->url);
+                $url = $url . '/' . $convension . '/' . $media->file_name;
+            } else {
+                $url = $media->url;
+            }
+            return $url;
+        }
+        return null;
     }
 }
