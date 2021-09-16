@@ -7,6 +7,16 @@ use Illuminate\Support\Facades\Auth;
 
 trait HasMediaTraitFileManager
 {
+    protected $mediaAttributes = [];
+
+    protected static function bootHasMediaTraitFileManager()
+    {
+        static::saved(function (self $model) {
+            foreach ($model->mediaAttributes as $key => $value) {
+                $model->attachMediaFileManager($value, $key);
+            }
+        });
+    }
     /**
      * Attach media to the specified group.
      * @param mixed $media
@@ -14,7 +24,7 @@ trait HasMediaTraitFileManager
      * @param array $conversions
      * @return void
      */
-    public function attachMediaFileManager($value)
+    public function attachMediaFileManager($value, $group = 'convension')
     {
         MediaFileManager::where(['table_type' => get_class($this), 'table_id' => $this->id])->delete();
         if ($value) {
@@ -25,6 +35,7 @@ trait HasMediaTraitFileManager
                     $media = MediaFileManager::create([
                         'file_name' => $fileName[count($fileName) - 1],
                         'url' => $v,
+                        'group' => $group
                     ]);
                     $media->table()->associate($this);
                     $media->author()->associate(Auth::guard('admin')->user());
@@ -43,7 +54,7 @@ trait HasMediaTraitFileManager
         if ($media) {
             if ($convension == 'thumbs') {
                 $url = $this->analyticUrl($media->url);
-                $url = $url . '/' . $convension . '/' . $media->file_name;
+                $url = $url.'/'.$convension.'/'.$media->file_name;
             } else {
                 $url = $media->url;
             }
