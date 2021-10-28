@@ -108,7 +108,10 @@ class MediaServiceProvider extends ServiceProvider
     private function registerAdminMenus()
     {
         Event::listen(CoreAdminMenuRegistered::class, function ($menu) {
-
+            $menu->add(__('Media'), [
+                'route' => 'media.admin.media.index',
+                'parent' => $menu->system->id
+            ])->data('order', 12)->prepend('<i class="fas fa-boxes"></i>');
         });
     }
 

@@ -4,8 +4,8 @@ return [
     'menu' => 'Media',
 
     'index' => [
-        'page_title'    => 'Danh sách media',
-        'page_subtitle' => 'Danh sách media',
+        'page_title'    => 'Quản lý file',
+        'page_subtitle' => 'Quản lý file',
     ],
 
     'create' => [

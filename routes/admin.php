@@ -8,8 +8,9 @@ Route::post('media/upload', UploadController::class)
     ->middleware('admin.can:media.admin.upload');
 
 Route::prefix('media')->group(function () {
-    Route::get('/', [MediaController::class, 'index'])
-        ->name('media.admin.media.index');
+    Route::get('/', function () {
+        return view('media::admin.file-manager');
+    })->name('media.admin.media.index');
     Route::post('/store', [MediaController::class, 'store'])
         ->name('media.admin.media.store');
     Route::get('{id}/edit', [MediaController::class, 'edit'])

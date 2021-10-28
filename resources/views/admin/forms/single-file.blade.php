@@ -1,24 +1,25 @@
 @if ($type == 'image')
-@if ($item && $name == 'seometa[og_image]')
-@php($image = $item->seometa ? $item->seometa['og_image'] : null)
-@elseif($item && $name == 'seometa[twitter_image]')
-@php($image = $item->seometa ? $item->seometa['twitter_image'] : null)
-@else
-@php($image = object_get($item, $name))
+    @if ($item && $name == 'seometa[og_image]')
+        @php($image = $item->seometa ? $item->seometa['og_image'] : null)
+    @elseif($item && $name == 'seometa[twitter_image]')
+        @php($image = $item->seometa ? $item->seometa['twitter_image'] : null)
+    @else
+        @php($image = object_get($item, $name))
+    @endif
+    @if ($image || isset($value))
+        <div class="single-holder-{{ $id }}" @if(isset($isNotStyle)) style="margin-top:15px;max-height:100px; margin-bottom: 10px" @endif></div>
+        <div class="single-holder" @if(isset($isNotStyle)) style="margin-top:15px;max-height:100px; margin-bottom: 10px" @endif>
+            <span class="close" data-single-image="{{ $image ?? $value }}">&times;</span>
+            <img src="{{ $image ?? $value }}" style="height: 5rem;" class="mr-2">
+        </div>
+    @else
+        <div class="single-holder-{{ $id }}" @if(isset($isNotStyle)) style="margin-top:15px;max-height:100px; margin-bottom: 10px" @endif></div>
+    @endif
 @endif
-@if ($image || isset($value))
-<div class="single-holder-{{ $id }}" @if(isset($isNotStyle)) style="margin-top:15px;max-height:100px; margin-bottom: 10px" @endif></div>
-<div class="single-holder" @if(isset($isNotStyle)) style="margin-top:15px;max-height:100px; margin-bottom: 10px" @endif>
-    <span class="close" data-single-image="{{ $image ?? $value }}">&times;</span>
-    <img src="{{ $image ?? $value }}" style="height: 5rem;" class="mr-2">
-</div>
-@else
-<div class="single-holder-{{ $id }}" @if(isset($isNotStyle)) style="margin-top:15px;max-height:100px; margin-bottom: 10px" @endif></div>
-@endif
-@endif
+
 <div class="input-group">
     @if (isset($label))
-    <label for="{{ $name }}" class="col-12 font-weight-600 text-left">{{ $label }}</label>
+        <label for="{{ $name }}" class="col-12 font-weight-600 text-left">{{ $label }}</label>
     @endif
     <span class="input-group-btn">
         <a data-type="single" data-single-input="single-thumbnail-{{ $id }}" name="{{ $name }}" data-single-preview="single-holder-{{ $id }}" class="btn btn-primary single-lfm">
