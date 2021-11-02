@@ -20,6 +20,6 @@
 
 @section('content')
     <div class="main-content">
-        <iframe src="/filemanager?type=image" style="width: 100%; height: 996px; overflow: hidden; border: none;"></iframe>
+        <iframe src="/admin/file-manager?type=image" style="width: 100%; height: 996px; overflow: hidden; border: none;"></iframe>
     </div>
 @stop

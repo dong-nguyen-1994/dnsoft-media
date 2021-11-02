@@ -30,7 +30,7 @@
 </div>
 
 @push('scripts')
-    <script src="{{ asset('vendor/laravel-filemanager/js/stand-alone-button.js') }}"></script>
+    <script src="{{ asset('vendor/dnsoft/admin/js/scripts/stand-alone-button.js') }}"></script>
     <script>
 
         $(document).ready(function () {
