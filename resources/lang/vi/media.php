@@ -23,4 +23,5 @@ return [
         'updated' => 'Cập nhật media thành công!',
         'deleted' => 'Xoá media thành công!',
     ],
+    'choose' => 'Vui lòng chọn',
 ];

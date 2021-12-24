@@ -23,4 +23,5 @@ return [
         'updated' => 'Media successfully updated!',
         'deleted' => 'Media successfully deleted!',
     ],
+    'choose' => 'Choose',
 ];
