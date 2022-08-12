@@ -18,7 +18,10 @@ class CreateMediaFileManagerTable extends Migration
             $table->string('file_name');
             $table->nullableMorphs('table');
             $table->nullableMorphs('author');
-            $table->string('url');
+            $table->string('url')->nullable();
+            $table->string('disk')->nullable();
+            $table->string('mime_type')->nullable();
+            $table->unsignedBigInteger('size')->nullable();
             $table->string('group')->nullable();
             $table->timestamps();
         });

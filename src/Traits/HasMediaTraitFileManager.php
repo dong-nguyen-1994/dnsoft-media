@@ -24,23 +24,19 @@ trait HasMediaTraitFileManager
      * @param array $conversions
      * @return void
      */
-    public function attachMediaFileManager($value, $group = 'convension')
+    public function attachMediaFileManager($filesName, $group = 'convension')
     {
         MediaFileManager::where(['table_type' => get_class($this), 'table_id' => $this->id])->delete();
-        if ($value) {
-            $values = explode(',', $value);
-            foreach ($values as $v) {
-                $fileName = explode('/', $v);
-                if ($v) {
-                    $media = MediaFileManager::create([
-                        'file_name' => $fileName[count($fileName) - 1],
-                        'url' => $v,
-                        'group' => $group
-                    ]);
-                    $media->table()->associate($this);
-                    $media->author()->associate(Auth::guard('admin')->user());
-                    $media->save();
-                }
+        if ($filesName) {
+            $arrFileName = explode(',', $filesName);
+            foreach ($arrFileName as $fileName) {
+                $media = MediaFileManager::create([
+                    'file_name' => $fileName,
+                    'group' => $group
+                ]);
+                $media->table()->associate($this);
+                $media->author()->associate(Auth::guard('admin')->user());
+                $media->save();
             }
         }
     }
@@ -63,27 +59,23 @@ trait HasMediaTraitFileManager
         return null;
     }
 
-    public function getAllMedias($convension = 'thumbs')
+    public function getGallery($model, $group = 'gallery', $convension = 'thumbs')
     {
-        $medias = MediaFileManager::select('url', 'file_name')->where([
-            'table_type' => get_class($this),
-            'table_id' => $this->id,
-        ])->get();
-        $arrGallery = [];
-        if ($medias) {
-            foreach ($medias as $media) {
-                if ($convension == 'thumbs') {
-                    $url = $this->analyticUrl($media->url);
-                    $url = $url . '/' . $convension . '/' . $media->file_name;
-                } else {
-                    $url = $media->url;
-                }
-                if ($url) {
-                    array_push($arrGallery, $url);
-                }
-            }
+        $gallery = MediaFileManager::select('file_name')
+            ->whereGroup($group)
+            ->whereTableType(get_class($this))
+            ->whereTableId($this->id)
+            ->get()->toArray();
+        $files = [];      
+        foreach ($gallery as $item) {
+            $file = [
+                'name' => $item['file_name'],
+                'uri' => $model. '/'. $convension . '/' .$item['file_name'],
+                'key' => generateRandomString(20)
+            ];
+            array_push($files, $file);
         }
-        return $arrGallery;
+        return $files;
     }
 
     private function analyticUrl($url)

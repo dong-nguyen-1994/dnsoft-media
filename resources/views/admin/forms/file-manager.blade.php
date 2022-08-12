@@ -1,85 +1,146 @@
-@if ($type == 'image')
 @php($gallery = object_get($item, $name))
-<?php
-if ($gallery && is_string($gallery)) {
-    $gallery = explode(',', $gallery);
-}
-?>
 
 @if ($gallery && count($gallery) > 0)
-@foreach($gallery as $image)
-<div class="holder" style="margin-top:15px;max-height:100px; margin-bottom: 10px">
-    <span class="close" data-image="{{ env('APP_URL'). '/'. $image }}">&times;</span>
-    <img src="{{ env('APP_URL'). '/'. $image }}" style="height: 5rem;" class="mr-2">
-</div>
-@endforeach
-@else
-<div class="holder" style="margin-top:15px;max-height:100px; margin-bottom: 10px"></div>
+    <div id="holder">
+        @php($arrGallery = array())
+        @foreach($gallery as $image)
+            <span class="form-group image-item-{{ $image['key'] }}">
+                <img class="img-thumbs" src="{{ env('APP_URL').'/storage/files/shares/'.$image['uri'] }}">
+                <div data-key="{{ $image['key'] }}" data-name="{{ $image['name'] }}" class="remove-item">Remove file</div>
+            </span>
+            @php(array_push($arrGallery, $image['name']))
+        @endforeach
+    </div>
 @endif
+
+@if (!$gallery )
+    <div id="holder"></div>
 @endif
-<div class="input-group">
+
+<div class="form-group">
     @if (isset($label))
-    <label for="{{ $name }}" class="col-12 font-weight-600" style="margin-left: -12px">{{ $label }}</label>
+        <label for="{{ $name }}">{{ $label }}</label>
     @endif
-    <span class="input-group-btn">
-        <a data-input="thumbnail" data-preview="holder" class="btn btn-primary lfm">
-            <i class="fa fa-picture-o"></i> {{ __('media::media.choose')}}
-        </a>
-    </span>
-    <input id="thumbnail" placeholder="{{ $placeholder ?? $label }}" class="form-control" type="text" value="{{ is_string($gallery) ? env('APP_URL'). '/'.$gallery : ($gallery ? env('APP_URL'). '/'. implode(',', $gallery) : '') }}" name="{{ $name }}">
+   <div class="input-group-btn">
+     <a data-input="files" data-preview="holder" style="cursor: pointer; color: #1abc9c" id="lfm">
+       <i class="fa fa-picture-o"></i> Chọn File
+     </a>
+     <input id="files" class="form-control" value="{{ $gallery ? implode(',', $arrGallery) : '' }}" type="hidden" name="{{ $name }}">
+   </div>
 </div>
 
 @push('scripts')
-<script src="{{ asset('vendor/dnsoft/admin/js/scripts/stand-alone-button.js') }}"></script>
-<script>
-    $(document).ready(function() {
-        $('.lfm').filemanager('{{ $type }}');
+    <script>
+        $(document).ready(function () {
 
-        $('body').on('click', '.holder .close', function(e) {
-            let images = $('#thumbnail').val();
-            let arrImage = images.split(',');
-            let srcImage = $(this).data('image');
-            const index = arrImage.indexOf(srcImage.toString());
-            if (index > -1) {
-                arrImage.splice(index, 1);
-                $('#thumbnail').val(arrImage.join(','));
-            }
-            let imgWrap = this.parentElement;
-            if (imgWrap.parentElement) {
-                imgWrap.parentElement.removeChild(imgWrap);
-            }
+            $('body').on('click', '.remove-item', function(e) {
+                const key = $(this).data('key');
+                let selector = '.image-item-' + key;
+                $(selector).remove();
+                const name = $(this).data('name');
+                let images = $('#files').val();
+                let arrImageName = images.split(',');
+                const index = arrImageName.indexOf(name.toString());
+                if (index > -1) {
+                    arrImageName.splice(index, 1);
+                    $('#files').val(arrImageName.join(','));
+                }
+            });
+
         });
-    });
-</script>
+
+
+        const lfm = function(id, type, options) {
+            let button = document.getElementById(id);
+
+            button.addEventListener('click', function () {
+                const route_prefix = (options && options.prefix) ? options.prefix : '/laravel-filemanager';
+                const files = button.getAttribute('data-input');
+                const target_input = document.getElementById(files);
+                const target_preview = document.getElementById(button.getAttribute('data-preview'));
+
+                window.open(route_prefix + '?type=' + options.type || 'file', 'FileManager', 'width=1390,height=650');
+                window.SetUrl = function (items) {
+                    const file_path = items.map(function (item) {
+                        return item.name;
+                    });
+                    const arr_file_name = $('#files').val().split(',');
+                    arr_file_name.forEach(function (itemFile) {
+                        if (!file_path.includes(itemFile)) {
+                            file_path.push(itemFile);
+                        }
+                    })
+                    // set the value of the desired input to image url
+                    target_input.value = file_path.join(',');
+
+                    target_input.dispatchEvent(new Event('change'));
+
+                    // clear previous preview
+                    target_preview.innerHtml = '';
+
+                    // set or change the preview image src
+                    items.forEach(function (item) {
+                        if (!arr_file_name.includes(item.name)) {
+                            const key = randomKey(20);
+                            const parent = document.createElement('span')
+                            parent.setAttribute('class', `form-group image-item-${key}`)
+
+                            let img = document.createElement('img')
+                            img.setAttribute('class', 'img-thumbs')
+                            img.setAttribute('src', item.thumb_url)
+                            parent.appendChild(img);
+
+                            const pElement = document.createElement('div')
+                            pElement.setAttribute('data-key', key)
+                            pElement.setAttribute('data-name', item.name)
+                            pElement.setAttribute('class', `remove-item`)
+                            pElement.innerHTML = 'Remove file'
+                            parent.appendChild(pElement);
+
+                            target_preview.appendChild(parent);
+                        }
+                    });
+
+                    // trigger change event
+                    target_preview.dispatchEvent(new Event('change'));
+                };
+            });
+        };
+
+        lfm('lfm', 'image', { prefix: '/admin/file-manager', type: 'file' });
+
+        function randomKey(length) {
+            let result = '';
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            const charactersLength = characters.length;
+            for (let i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+            return result;
+        }
+    </script>
 @endpush
 
 @push('styles')
-<style>
-    .holder {
-        position: relative;
-        display: inline-block;
-        font-size: 0;
-    }
+    <style>
+        #holder {
+            display: flex;
+            flex-flow: row wrap;
+            margin-top: 25px
+        }
 
-    .holder .close {
-        position: absolute;
-        top: -10px;
-        right: 2px;
-        z-index: 100;
-        background-color: #FFF;
-        padding: 5px 2px 2px;
-        color: #000;
-        font-weight: bold;
-        cursor: pointer;
-        opacity: .2;
-        text-align: center;
-        font-size: 22px;
-        line-height: 10px;
-        border-radius: 50%;
-    }
+        .img-thumbs {
+            height: 5rem;
+            margin-right: 0.7rem;
+            border-radius: 10px;
+        }
 
-    .holder .close {
-        opacity: 1;
-    }
-</style>
+        .remove-item {
+            font-size: 12px;
+            margin-top: 3px;
+            font-weight: 600;
+            cursor: pointer;
+            color: #1abc9c
+        }
+    </style>
 @endpush
