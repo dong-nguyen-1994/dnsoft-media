@@ -5,7 +5,7 @@
         @php($arrGallery = array())
         @foreach($gallery as $image)
             <span class="form-group image-item-{{ $image['key'] }}">
-                <img class="img-thumbs" src="{{ env('APP_URL').'/storage/files/shares/'.$image['uri'] }}">
+                <img class="img-thumbs" src="{{ $image['url'] }}">
                 <div data-key="{{ $image['key'] }}" data-name="{{ $image['name'] }}" class="remove-item">Remove file</div>
             </span>
             @php(array_push($arrGallery, $image['name']))

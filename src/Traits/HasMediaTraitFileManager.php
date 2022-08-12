@@ -24,7 +24,7 @@ trait HasMediaTraitFileManager
      * @param array $conversions
      * @return void
      */
-    public function attachMediaFileManager($filesName, $group = 'convension')
+    public function attachMediaFileManager($filesName, $group = 'gallery')
     {
         MediaFileManager::where(['table_type' => get_class($this), 'table_id' => $this->id])->delete();
         if ($filesName) {
@@ -41,21 +41,18 @@ trait HasMediaTraitFileManager
         }
     }
 
-    public function getFirstMedia($convension = 'thumbs')
+    public function getFirstMedia($model, $group = 'gallery', $convension = 'thumbs')
     {
-        $media = MediaFileManager::select('url', 'file_name')->where([
-            'table_type' => get_class($this),
-            'table_id' => $this->id,
-        ])->first();
+        $media = MediaFileManager::select('file_name')
+            ->whereGroup($group)
+            ->whereTableType(get_class($this))
+            ->whereTableId($this->id)
+            ->first();
+
         if ($media) {
-            if ($convension == 'thumbs') {
-                $url = $this->analyticUrl($media->url);
-                $url = $url.'/'.$convension.'/'.$media->file_name;
-            } else {
-                $url = $media->url;
-            }
-            return $url;
+            return get_url_file_path(). $model. '/'. $convension . '/' .$media['file_name'];
         }
+
         return null;
     }
 
@@ -66,11 +63,12 @@ trait HasMediaTraitFileManager
             ->whereTableType(get_class($this))
             ->whereTableId($this->id)
             ->get()->toArray();
-        $files = [];      
+        $files = [];
+        $storagePath = get_url_file_path();
         foreach ($gallery as $item) {
             $file = [
                 'name' => $item['file_name'],
-                'uri' => $model. '/'. $convension . '/' .$item['file_name'],
+                'url' => $storagePath . $model. '/'. $convension . '/' .$item['file_name'],
                 'key' => generateRandomString(20)
             ];
             array_push($files, $file);
