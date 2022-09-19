@@ -30,13 +30,15 @@ trait HasMediaTraitFileManager
         if ($filesName) {
             $arrFileName = explode(',', $filesName);
             foreach ($arrFileName as $fileName) {
-                $media = MediaFileManager::create([
-                    'file_name' => $fileName,
-                    'group' => $group
-                ]);
-                $media->table()->associate($this);
-                $media->author()->associate(Auth::guard('admin')->user());
-                $media->save();
+                if ($fileName) {
+                    $media = MediaFileManager::create([
+                        'file_name' => $fileName,
+                        'group' => $group
+                    ]);
+                    $media->table()->associate($this);
+                    $media->author()->associate(Auth::guard('admin')->user());
+                    $media->save();
+                }
             }
         }
     }

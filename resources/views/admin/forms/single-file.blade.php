@@ -1,83 +1,144 @@
-@if ($type == 'image')
-@if ($item && $name == 'seometa[og_image]')
-@php($image = $item->seometa ? $item->seometa['og_image'] : null)
-@elseif($item && $name == 'seometa[twitter_image]')
-@php($image = $item->seometa ? $item->seometa['twitter_image'] : null)
-@else
-@php($image = object_get($item, $name))
-@endif
-@if ($image || isset($value))
-<div class="single-holder-{{ $id }}" @if(isset($isNotStyle)) style="margin-top:15px;max-height:100px; margin-bottom: 10px" @endif></div>
-<div class="single-holder" @if(isset($isNotStyle)) style="margin-top:15px;max-height:100px; margin-bottom: 10px" @endif>
-    <span class="close" data-single-image="{{ env('APP_URL'). '/'.$image ?? $value }}">&times;</span>
-    <img src="{{ env('APP_URL'). '/'. $image ?? $value }}" style="height: 5rem;" class="mr-2">
-</div>
-@else
-<div class="single-holder-{{ $id }}" @if(isset($isNotStyle)) style="margin-top:15px;max-height:100px; margin-bottom: 10px" @endif></div>
-@endif
+@php($gallery = object_get($item, $name))
+
+@if ($gallery && count($gallery) > 0)
+    <div id="{{ $idHolder }}"  style="display: flex;
+            flex-flow: row wrap;
+            margin-top: 25px">
+        @php($arrGallery = array())
+        @foreach($gallery as $image)
+            <span class="form-group image-item-{{ $image['key'] }}">
+                <img class="img-thumbs" src="{{ $image['url'] }}">
+                <div data-key="{{ $image['key'] }}" data-name="{{ $image['name'] }}" class="remove-item">Remove file</div>
+            </span>
+            @php(array_push($arrGallery, $image['name']))
+        @endforeach
+    </div>
 @endif
 
-<div class="input-group">
+@if (!$gallery )
+    <div id="{{ $idHolder }}" style="display: flex;
+            flex-flow: row wrap;"></div>
+@endif
+
+<div class="form-group">
     @if (isset($label))
-    <label for="{{ $name }}" class="col-12 font-weight-600" style="margin-left: -12px">{{ $label }}</label>
+        <label for="{{ $name }}">{{ $label }}</label>
     @endif
-    <span class="input-group-btn">
-        <a data-type="single" data-single-input="single-thumbnail-{{ $id }}" name="{{ $name }}" data-single-preview="single-holder-{{ $id }}" class="btn btn-primary single-lfm">
-            <i class="fa fa-picture-o"></i> {{ __('media::media.choose')}}
-        </a>
-    </span>
-    <input id="single-thumbnail-{{ $id }}" placeholder="{{ $placeholder ?? $label }}" class="form-control" type="text" value="{{ $image ? env('APP_URL'). '/'.$image : (isset($value) ? env('APP_URL'). '/'.$value : '') }}" name="{{ $name }}">
+   <div class="input-group-btn">
+     <a data-input="files" data-preview="{{ $idHolder }}" style="cursor: pointer; color: #1abc9c" id="{{ $name }}">
+       <i class="fa fa-picture-o"></i> Chọn File
+     </a>
+     <input id="files" class="form-control" value="{{ $gallery ? implode(',', $arrGallery) : '' }}" type="hidden" name="{{ $name }}">
+   </div>
 </div>
 
 @push('scripts')
-<script src="{{ asset('vendor/dnsoft/admin/js/scripts/stand-alone-button.js') }}"></script>
-<script>
-    $(document).ready(function() {
-        $('.single-lfm').filemanager('image');
+    <script>
+        $(document).ready(function () {
 
-        $('body').on('click', '.single-holder .close', function(e) {
-            let images = $('#' + 'single-thumbnail-{{ $id }}').val();
-            let srcImage = $(this).data('single-image');
-            if (srcImage == images) {
-                $('#' + 'single-thumbnail-{{ $id }}').val('');
-            }
+            $('body').on('click', '.remove-item', function(e) {
+                const key = $(this).data('key');
+                let selector = '.image-item-' + key;
+                $(selector).remove();
+                const name = $(this).data('name');
+                let images = $('#files').val();
+                let arrImageName = images.split(',');
+                const index = arrImageName.indexOf(name.toString());
+                if (index > -1) {
+                    arrImageName.splice(index, 1);
+                    $('#files').val(arrImageName.join(','));
+                }
+            });
 
-            let imgWrap = this.parentElement;
-            if (imgWrap.parentElement) {
-                imgWrap.parentElement.removeChild(imgWrap);
-            }
         });
-    });
-</script>
+
+
+        (function(id, type, options) {
+            let button = document.getElementById(id);
+
+            button.addEventListener('click', function () {
+                const route_prefix = (options && options.prefix) ? options.prefix : '/laravel-filemanager';
+                const files = button.getAttribute('data-input');
+                const target_input = document.getElementById(files);
+                const target_preview = document.getElementById(button.getAttribute('data-preview'));
+
+                window.open(route_prefix + '?type=' + options.type || 'file', 'FileManager', 'width=1390,height=650');
+                window.SetUrl = function (items) {
+                    items = [items[0]]
+                    const file_path = items.map(function (item) {
+                        return item.name;
+                    });
+                    const arr_file_name = $('#files').val().split(',');
+                    arr_file_name.forEach(function (itemFile) {
+                        if (!file_path.includes(itemFile)) {
+                            file_path.push(itemFile);
+                        }
+                    })
+                    // set the value of the desired input to image url
+                    target_input.value = file_path.join(',');
+
+                    target_input.dispatchEvent(new Event('change'));
+
+                    // clear previous preview
+                    target_preview.innerHtml = '';
+
+                    // set or change the preview image src
+                    items.forEach(function (item) {
+                        if (!arr_file_name.includes(item.name)) {
+                            const key = randomKey(20);
+                            const parent = document.createElement('span')
+                            parent.setAttribute('class', `form-group image-item-${key}`)
+
+                            let img = document.createElement('img')
+                            img.setAttribute('class', 'img-thumbs')
+                            img.setAttribute('src', item.thumb_url)
+                            parent.appendChild(img);
+
+                            const pElement = document.createElement('div')
+                            pElement.setAttribute('data-key', key)
+                            pElement.setAttribute('data-name', item.name)
+                            pElement.setAttribute('class', `remove-item`)
+                            pElement.innerHTML = 'Remove file'
+                            parent.appendChild(pElement);
+
+                            target_preview.appendChild(parent);
+                        }
+                    });
+
+                    // trigger change event
+                    target_preview.dispatchEvent(new Event('change'));
+                };
+            });
+        })('{{ $name }}', 'image', { prefix: '/admin/file-manager', type: 'file' });
+
+        // lfm('{{ $name }}', 'image', { prefix: '/admin/file-manager', type: 'file' });
+
+        function randomKey(length) {
+            let result = '';
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            const charactersLength = characters.length;
+            for (let i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+            return result;
+        }
+    </script>
 @endpush
 
 @push('styles')
-<style>
-    .single-holder {
-        position: relative;
-        display: inline-block;
-        font-size: 0;
-    }
+    <style>
+        .img-thumbs {
+            height: 5rem;
+            margin-right: 0.7rem;
+            border-radius: 10px;
+        }
 
-    .single-holder .close {
-        position: absolute;
-        top: -10px;
-        right: 2px;
-        z-index: 100;
-        background-color: #FFF;
-        padding: 5px 2px 2px;
-        color: #000;
-        font-weight: bold;
-        cursor: pointer;
-        opacity: .2;
-        text-align: center;
-        font-size: 22px;
-        line-height: 10px;
-        border-radius: 50%;
-    }
-
-    .single-holder .close {
-        opacity: 1;
-    }
-</style>
+        .remove-item {
+            font-size: 12px;
+            margin-top: 3px;
+            font-weight: 600;
+            cursor: pointer;
+            color: #1abc9c
+        }
+    </style>
 @endpush
