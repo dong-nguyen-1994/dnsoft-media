@@ -71,7 +71,7 @@ trait HasMediaTraitFileManager
             $file = [
                 'name' => $item['file_name'],
                 'url' => $storagePath . $model. '/'. $convension . '/' .$item['file_name'],
-                'key' => generateRandomString(20)
+                'key' => generate_random_string(20)
             ];
             array_push($files, $file);
         }
