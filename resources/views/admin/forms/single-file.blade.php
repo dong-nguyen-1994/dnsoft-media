@@ -1,61 +1,53 @@
-@php($gallery = object_get($item, $name))
-
-@if ($gallery && count($gallery) > 0)
-    <div id="{{ $idHolder }}"  style="display: flex;
-            flex-flow: row wrap;
-            margin-top: 25px">
-        @php($arrGallery = array())
-        @foreach($gallery as $image)
-            <span class="form-group image-item-{{ $image['key'] }}">
-                <img class="img-thumbs" src="{{ $image['url'] }}">
-                <div data-key="{{ $image['key'] }}" data-name="{{ $image['name'] }}" class="remove-item">Remove file</div>
-            </span>
-            @php(array_push($arrGallery, $image['name']))
-        @endforeach
+@php($image = object_get($item, $name))
+@if ($image)
+    <?php
+    $imageName = explode('/', $image);
+    $imageName = $imageName[count($imageName) - 1];
+    ?>
+    <div id="{{ $idHolder }}" style="display: flex; flex-flow: row wrap;">
+        <span class="form-group image-item-{{ $item->id }}">
+            <img class="img-thumbs" src="{{ $image }}">
+            <div data-key="{{ $item->id }}" data-name="{{ $imageName }}" class="remove-item">Remove file</div>
+        </span>
     </div>
 @endif
 
-@if (!$gallery )
-    <div id="{{ $idHolder }}" style="display: flex;
-            flex-flow: row wrap;"></div>
+@if (!$image )
+    <div id="{{ $idHolder }}" style="display: flex; flex-flow: row wrap;"></div>
 @endif
 
 <div class="form-group">
     @if (isset($label))
         <label for="{{ $name }}">{{ $label }}</label>
     @endif
-   <div class="input-group-btn">
-     <a data-input="files" data-preview="{{ $idHolder }}" style="cursor: pointer; color: #1abc9c" id="{{ $name }}">
-       <i class="fa fa-picture-o"></i> Chọn File
-     </a>
-     <input id="files" class="form-control" value="{{ $gallery ? implode(',', $arrGallery) : '' }}" type="hidden" name="{{ $name }}">
+    <div class="input-group-btn">
+        <a data-input="files_{{ $files }}" data-preview="{{ $idHolder }}" style="cursor: pointer; color: #1abc9c" id="{{ $name }}">
+            <i class="fa fa-picture-o"></i> Chọn File
+        </a>    
+        <input id="files_{{ $files }}" class="form-control" value="{{ isset($imageName) ? $imageName : '' }}" type="hidden" name="{{ $name }}">
    </div>
 </div>
 
 @push('scripts')
     <script>
         $(document).ready(function () {
-
             $('body').on('click', '.remove-item', function(e) {
                 const key = $(this).data('key');
                 let selector = '.image-item-' + key;
                 $(selector).remove();
                 const name = $(this).data('name');
-                let images = $('#files').val();
+                let images = $('#files_{{ $files }}').val();
                 let arrImageName = images.split(',');
                 const index = arrImageName.indexOf(name.toString());
                 if (index > -1) {
                     arrImageName.splice(index, 1);
-                    $('#files').val(arrImageName.join(','));
+                    $('#files_{{ $files }}').val(arrImageName.join(','));
                 }
             });
-
         });
-
 
         (function(id, type, options) {
             let button = document.getElementById(id);
-
             button.addEventListener('click', function () {
                 const route_prefix = (options && options.prefix) ? options.prefix : '/laravel-filemanager';
                 const files = button.getAttribute('data-input');
@@ -68,7 +60,7 @@
                     const file_path = items.map(function (item) {
                         return item.name;
                     });
-                    const arr_file_name = $('#files').val().split(',');
+                    const arr_file_name = $('#files_{{ $files }}').val().split(',');
                     arr_file_name.forEach(function (itemFile) {
                         if (!file_path.includes(itemFile)) {
                             file_path.push(itemFile);
@@ -76,7 +68,6 @@
                     })
                     // set the value of the desired input to image url
                     target_input.value = file_path.join(',');
-
                     target_input.dispatchEvent(new Event('change'));
 
                     // clear previous preview
@@ -100,8 +91,24 @@
                             pElement.setAttribute('class', `remove-item`)
                             pElement.innerHTML = 'Remove file'
                             parent.appendChild(pElement);
-
                             target_preview.appendChild(parent);
+
+                            // Remove previous image
+                            const previouseElement = parent.previousElementSibling;
+                            if (previouseElement) {
+                                const divElement = previouseElement.querySelector('div');
+                                const fileName = divElement.getAttribute('data-name');
+                                previouseElement.remove();
+
+                                // Remove data image
+                                const files = $('#files_{{ $files }}').val();
+                                let imagesName = files.split(',');
+                                const index = imagesName.indexOf(fileName.toString());
+                                if (index > -1) {
+                                    imagesName.splice(index, 1);
+                                    $('#files_{{ $files }}').val(imagesName.join(','));
+                                }
+                            }
                         }
                     });
 
@@ -110,8 +117,6 @@
                 };
             });
         })('{{ $name }}', 'image', { prefix: '/admin/file-manager', type: 'file' });
-
-        // lfm('{{ $name }}', 'image', { prefix: '/admin/file-manager', type: 'file' });
 
         function randomKey(length) {
             let result = '';
