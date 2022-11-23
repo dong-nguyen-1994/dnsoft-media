@@ -26,7 +26,7 @@ trait HasMediaTraitFileManager
      */
     public function attachMediaFileManager($filesName, $group = 'gallery')
     {
-        MediaFileManager::where(['table_type' => get_class($this), 'table_id' => $this->id])->delete();
+        MediaFileManager::where(['table_type' => get_class($this), 'table_id' => $this->id, 'group' => $group])->delete();
         if ($filesName) {
             $arrFileName = explode(',', $filesName);
             foreach ($arrFileName as $fileName) {
