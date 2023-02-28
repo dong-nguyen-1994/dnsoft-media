@@ -1,4 +1,8 @@
+@if(isset($fieldGetData))
+@php($image = object_get($item, $fieldGetData))
+@else
 @php($image = object_get($item, $name))
+@endif
 @if ($image)
     <?php
     $imageName = explode('/', $image);
