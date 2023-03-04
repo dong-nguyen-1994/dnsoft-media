@@ -56,10 +56,15 @@
 
                 window.open(route_prefix + '?type=' + options.type || 'file', 'FileManager', 'width=1390,height=650');
                 window.SetUrl = function (items) {
+                    console.log({ items });
                     items = [items[0]]
+                    // const file_path = items.map(function (item) {
+                    //     return item.name;
+                    // });
                     const file_path = items.map(function (item) {
-                        return item.name;
+                        return item.url.split('/').filter(item => item).filter((item, index) => index > 4).join('/');
                     });
+                    console.log({ file_path });
                     const arr_file_name = $('#files_{{ $files }}').val().split(',');
                     arr_file_name.forEach(function (itemFile) {
                         if (!file_path.includes(itemFile)) {

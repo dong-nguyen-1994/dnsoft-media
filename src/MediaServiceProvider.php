@@ -120,5 +120,6 @@ class MediaServiceProvider extends ServiceProvider
         Blade::include('media::admin.modals.tag-modal', 'modalMedia');
         Blade::include('media::admin.forms.file-manager', 'fileManager');
         Blade::include('media::admin.forms.single-file', 'singleFile');
+        Blade::include('media::admin.forms.single-image', 'singleImage');
     }
 }

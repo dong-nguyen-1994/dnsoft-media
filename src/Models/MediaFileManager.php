@@ -17,6 +17,8 @@ class MediaFileManager extends Model
         'table_id',
         'table_type',
         'group',
+        'origin_path',
+        'thumbnail_path',
     ];
 
     public function author()
