@@ -22,7 +22,7 @@
 
     "autoload": {
         "psr-4": {
-            "Dnsoft\\Media\\": "/src"
+            "DnSoft\\Media\\": "/src"
         },
         "files": [
             "helpers/helpers.php"
