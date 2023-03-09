@@ -1,14 +1,14 @@
 <?php
 
-namespace Dnsoft\Media\Resources;
+namespace DnSoft\Media\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use Dnsoft\Media\Models\Media;
+use DnSoft\Media\Models\Media;
 
 /**
  * Class FroalaMediaResource
  *
- * @package Dnsoft\Media\Resources
+ * @package DnSoft\Media\Resources
  * @mixin Media
  */
 class FroalaMediaResource extends JsonResource

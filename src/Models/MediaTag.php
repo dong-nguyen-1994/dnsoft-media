@@ -1,6 +1,6 @@
 <?php
 
-namespace Dnsoft\Media\Models;
+namespace DnSoft\Media\Models;
 
 use Illuminate\Database\Eloquent\Model;
 

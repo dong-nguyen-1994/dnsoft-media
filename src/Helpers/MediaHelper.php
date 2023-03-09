@@ -1,6 +1,6 @@
 <?php
 
-namespace Dnsoft\Media\Helpers;
+namespace DnSoft\Media\Helpers;
 
 class MediaHelper
 {

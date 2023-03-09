@@ -1,6 +1,6 @@
 <?php
 
-namespace Dnsoft\Media\Exceptions;
+namespace DnSoft\Media\Exceptions;
 
 class CantUploadException extends \Exception
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Dnsoft\Media\Jobs;
+namespace DnSoft\Media\Jobs;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;

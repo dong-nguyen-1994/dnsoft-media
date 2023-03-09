@@ -1,8 +1,8 @@
 <?php
 
-namespace Dnsoft\Media\Traits;
+namespace DnSoft\Media\Traits;
 
-use Dnsoft\Media\Models\MediaFileManager;
+use DnSoft\Media\Models\MediaFileManager;
 use Illuminate\Support\Facades\Auth;
 
 trait HasImageTraitManager

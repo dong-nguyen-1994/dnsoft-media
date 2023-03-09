@@ -1,8 +1,8 @@
 <?php
 
-namespace Dnsoft\Media\Repositories;
+namespace DnSoft\Media\Repositories;
 
-use Dnsoft\Core\Repositories\BaseRepository;
+use DnSoft\Core\Repositories\BaseRepository;
 
 class MediaTagRepository extends BaseRepository implements MediaTagRepositoryInterface
 {

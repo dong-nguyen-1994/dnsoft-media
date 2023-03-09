@@ -1,8 +1,8 @@
 <?php
 
-namespace Dnsoft\Media\Repositories;
+namespace DnSoft\Media\Repositories;
 
-use Dnsoft\Core\Repositories\BaseRepositoryInterface;
+use DnSoft\Core\Repositories\BaseRepositoryInterface;
 
 interface MediaTagRepositoryInterface extends BaseRepositoryInterface
 {

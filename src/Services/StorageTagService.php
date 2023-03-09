@@ -1,7 +1,7 @@
 <?php
-namespace Dnsoft\Media\Services;
+namespace DnSoft\Media\Services;
 
-use Dnsoft\Media\Models\MediaTag;
+use DnSoft\Media\Models\MediaTag;
 
 class StorageTagService
 {

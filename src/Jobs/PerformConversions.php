@@ -1,14 +1,14 @@
 <?php
 
-namespace Dnsoft\Media\Jobs;
+namespace DnSoft\Media\Jobs;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Dnsoft\Media\ImageManipulator;
-use Dnsoft\Media\Models\Media;
+use DnSoft\Media\ImageManipulator;
+use DnSoft\Media\Models\Media;
 
 class PerformConversions implements ShouldQueue
 {

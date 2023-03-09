@@ -1,14 +1,14 @@
 <?php
 
-namespace Dnsoft\Media\Models;
+namespace DnSoft\Media\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Dnsoft\Core\Traits\CacheableTrait;
+use DnSoft\Core\Traits\CacheableTrait;
 
 /**
- * Dnsoft\Media\Models\Media
+ * DnSoft\Media\Models\Media
  *
  * @property int $id
  * @property string $name
@@ -23,9 +23,9 @@ use Dnsoft\Core\Traits\CacheableTrait;
  * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $author
  * @property-read string $extension
  * @property-read string|null $type
- * @property-read \Illuminate\Database\Eloquent\Collection|\Dnsoft\Media\Models\Mediable[] $mediables
+ * @property-read \Illuminate\Database\Eloquent\Collection|\DnSoft\Media\Models\Mediable[] $mediables
  * @property-read int|null $mediables_count
- * @method static \Rinvex\Cacheable\EloquentBuilder|\Dnsoft\Media\Models\Media newModelQuery()
+ * @method static \Rinvex\Cacheable\EloquentBuilder|\DnSoft\Media\Models\Media newModelQuery()
  * @method static \Rinvex\Cacheable\EloquentBuilder|\Dnsoft\Media\Models\Media newQuery()
  * @method static \Rinvex\Cacheable\EloquentBuilder|\Dnsoft\Media\Models\Media query()
  * @method static \Illuminate\Database\Eloquent\Builder|\Dnsoft\Media\Models\Media whereAuthorId($value)

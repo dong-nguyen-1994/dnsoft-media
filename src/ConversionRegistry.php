@@ -1,8 +1,8 @@
 <?php
 
-namespace Dnsoft\Media;
+namespace DnSoft\Media;
 
-use Dnsoft\Media\Exceptions\InvalidConversionException;
+use DnSoft\Media\Exceptions\InvalidConversionException;
 
 class ConversionRegistry
 {

@@ -1,25 +1,25 @@
 <?php
 
-namespace Dnsoft\Media;
+namespace DnSoft\Media;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Intervention\Image\Image;
-use Dnsoft\Acl\Facades\Permission;
-use Dnsoft\Core\Events\CoreAdminMenuRegistered;
-use Dnsoft\Media\Events\MediaUploadedEvent;
-use Dnsoft\Media\Facades\Conversion;
-use Dnsoft\Media\Jobs\PerformConversions;
-use Dnsoft\Media\Models\Media;
-use Dnsoft\Media\Models\Mediable;
-use Dnsoft\Media\Models\MediaTag;
-use Dnsoft\Media\Repositories\MediableRepository;
-use Dnsoft\Media\Repositories\MediableRepositoryInterace;
-use Dnsoft\Media\Repositories\MediaRepository;
-use Dnsoft\Media\Repositories\MediaRepositoryInterface;
-use Dnsoft\Media\Repositories\MediaTagRepositoryInterface;
+use DnSoft\Acl\Facades\Permission;
+use DnSoft\Core\Events\CoreAdminMenuRegistered;
+use DnSoft\Media\Events\MediaUploadedEvent;
+use DnSoft\Media\Facades\Conversion;
+use DnSoft\Media\Jobs\PerformConversions;
+use DnSoft\Media\Models\Media;
+use DnSoft\Media\Models\Mediable;
+use DnSoft\Media\Models\MediaTag;
+use DnSoft\Media\Repositories\MediableRepository;
+use DnSoft\Media\Repositories\MediableRepositoryInterace;
+use DnSoft\Media\Repositories\MediaRepository;
+use DnSoft\Media\Repositories\MediaRepositoryInterface;
+use DnSoft\Media\Repositories\MediaTagRepositoryInterface;
 
 class MediaServiceProvider extends ServiceProvider
 {

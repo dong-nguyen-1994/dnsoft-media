@@ -1,6 +1,6 @@
 <?php
 
-namespace Dnsoft\Media;
+namespace DnSoft\Media;
 
 class MediaGroup
 {

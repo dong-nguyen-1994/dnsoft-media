@@ -1,17 +1,17 @@
 <?php
 
-namespace Dnsoft\Media\Http\Controllers\Admin;
+namespace DnSoft\Media\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
-use Dnsoft\Media\Helpers\MediaHelper;
-use Dnsoft\Media\MediaUploader;
-use Dnsoft\Media\Models\Media;
-use Dnsoft\Media\Repositories\MediableRepositoryInterace;
-use Dnsoft\Media\Repositories\MediaRepositoryInterface;
-use Dnsoft\Media\Resources\FroalaMediaResource;
+use DnSoft\Media\Helpers\MediaHelper;
+use DnSoft\Media\MediaUploader;
+use DnSoft\Media\Models\Media;
+use DnSoft\Media\Repositories\MediableRepositoryInterace;
+use DnSoft\Media\Repositories\MediaRepositoryInterface;
+use DnSoft\Media\Resources\FroalaMediaResource;
 
 class MediaController extends Controller
 {

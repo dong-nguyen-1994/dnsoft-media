@@ -1,9 +1,9 @@
 <?php
 
-namespace Dnsoft\Media\Events;
+namespace DnSoft\Media\Events;
 
 use Illuminate\Queue\SerializesModels;
-use Dnsoft\Media\Models\Media;
+use DnSoft\Media\Models\Media;
 
 class MediaUploadedEvent
 {

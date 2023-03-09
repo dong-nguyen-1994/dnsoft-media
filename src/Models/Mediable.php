@@ -1,11 +1,11 @@
 <?php
 
-namespace Dnsoft\Media\Models;
+namespace DnSoft\Media\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Dnsoft\Media\Models\Mediable
+ * DnSoft\Media\Models\Mediable
  *
  * @property int $id
  * @property int $media_id

@@ -1,6 +1,6 @@
 <?php
 
-namespace Dnsoft\Media\Resources;
+namespace DnSoft\Media\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 

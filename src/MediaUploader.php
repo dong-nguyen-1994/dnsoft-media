@@ -1,12 +1,12 @@
 <?php
 
-namespace Dnsoft\Media;
+namespace DnSoft\Media;
 
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
-use Dnsoft\Media\Events\MediaUploadedEvent;
-use Dnsoft\Media\Exceptions\CantUploadException;
-use Dnsoft\Media\Models\Media;
+use DnSoft\Media\Events\MediaUploadedEvent;
+use DnSoft\Media\Exceptions\CantUploadException;
+use DnSoft\Media\Models\Media;
 
 class MediaUploader
 {

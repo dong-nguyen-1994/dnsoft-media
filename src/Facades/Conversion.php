@@ -1,9 +1,9 @@
 <?php
 
-namespace Dnsoft\Media\Facades;
+namespace DnSoft\Media\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use Dnsoft\Media\ConversionRegistry;
+use DnSoft\Media\ConversionRegistry;
 
 class Conversion extends Facade
 {

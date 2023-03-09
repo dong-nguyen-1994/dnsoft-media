@@ -1,13 +1,13 @@
 <?php
 
-namespace Dnsoft\Media\Http\Controllers\Admin;
+namespace DnSoft\Media\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
-use Dnsoft\Media\MediaUploader;
-use Dnsoft\Media\Resources\MediaResource;
+use DnSoft\Media\MediaUploader;
+use DnSoft\Media\Resources\MediaResource;
 
 class UploadController extends Controller
 {

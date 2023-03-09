@@ -1,17 +1,17 @@
 <?php
 
-namespace Dnsoft\Media\Traits;
+namespace DnSoft\Media\Traits;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use Dnsoft\Media\Jobs\PerformConversions;
-use Dnsoft\Media\MediaGroup;
-use Dnsoft\Media\Models\Media;
+use DnSoft\Media\Jobs\PerformConversions;
+use DnSoft\Media\MediaGroup;
+use DnSoft\Media\Models\Media;
 
 /**
  * Trait HasMediaTrait
  *
- * @package Dnsoft\Media\Traits
+ * @package DnSoft\Media\Traits
  *
  * @property boolean $forceDeleteMedia
  */

@@ -1,9 +1,9 @@
 <?php
 
-namespace Dnsoft\Media;
+namespace DnSoft\Media;
 
 use Intervention\Image\ImageManager;
-use Dnsoft\Media\Models\Media;
+use DnSoft\Media\Models\Media;
 
 class ImageManipulator
 {
