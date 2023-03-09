@@ -11,7 +11,6 @@ use DnSoft\Media\MediaUploader;
 use DnSoft\Media\Models\Media;
 use DnSoft\Media\Repositories\MediableRepositoryInterace;
 use DnSoft\Media\Repositories\MediaRepositoryInterface;
-use DnSoft\Media\Resources\FroalaMediaResource;
 
 class MediaController extends Controller
 {

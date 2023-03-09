@@ -1,7 +1,7 @@
 <?php
 
-use Dnsoft\Media\Http\Controllers\Admin\UploadController;
-use Dnsoft\Media\Http\Controllers\Admin\MediaController;
+use DnSoft\Media\Http\Controllers\Admin\UploadController;
+use DnSoft\Media\Http\Controllers\Admin\MediaController;
 
 Route::post('media/upload', UploadController::class)
     ->name('media.admin.upload')
