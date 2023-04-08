@@ -22,7 +22,7 @@ class CreateTableMediaTag extends Migration
             $table->longText('content')->nullable();
             $table->timestamps();
 
-            $table->foreign('media_id')->references('id')->on('media')->onDelete('cascade');
+            $table->foreign('media_id')->references('id')->on('medias')->onDelete('cascade');
         });
     }
 

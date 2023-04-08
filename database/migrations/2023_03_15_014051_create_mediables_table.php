@@ -18,7 +18,7 @@ class CreateMediablesTable extends Migration
             $table->unsignedBigInteger('media_id');
             $table->nullableMorphs('mediable');
             $table->string('group')->nullable();
-            $table->foreign('media_id')->references('id')->on('media')->onDelete('cascade');
+            $table->foreign('media_id')->references('id')->on('medias')->onDelete('cascade');
         });
     }
 

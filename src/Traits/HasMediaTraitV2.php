@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use DnSoft\Media\Jobs\PerformConversions;
 use DnSoft\Media\MediaGroup;
+use DnSoft\Media\Models\Folder;
 use DnSoft\Media\Models\Media;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Trait HasMediaTrait
@@ -15,14 +17,14 @@ use DnSoft\Media\Models\Media;
  *
  * @property boolean $forceDeleteMedia
  */
-trait HasMediaTrait
+trait HasMediaTraitV2
 {
   /** @var MediaGroup[] */
   protected $mediaGroups = [];
 
   protected $mediaAttributes = [];
 
-  protected static function bootHasMediaTrait()
+  protected static function bootHasMediaTraitV2()
   {
     static::deleting(function (self $model) {
       if ($model->forceDeleteMedia()) {
@@ -35,9 +37,16 @@ trait HasMediaTrait
     });
 
     static::saved(function (self $model) {
-      foreach ($model->mediaAttributes as $key => $value) {
-        $model->syncMedia($value, $key);
-      }
+      $mediaIdsTmp = DB::table('media__media_temps')->where([
+        'session_id' => session()->get('session_id'),
+      ])->pluck('media_id')->toArray();
+      // dd($mediaIdsTmp);
+      $medias = Media::whereIn('id', $mediaIdsTmp)->get();
+      // foreach ($model->mediaAttributes as $key => $value) {
+        foreach($medias as $media) {
+          $model->syncMedia($media);
+        }
+      // }
     });
   }
 
@@ -156,6 +165,7 @@ trait HasMediaTrait
   {
     $this->clearMediaGroup($group);
     $this->attachMedia($media, $group, $conversions);
+    $this->deleteFileInTemp($media->id);
   }
 
   /**
@@ -232,5 +242,32 @@ trait HasMediaTrait
   protected function forceDeleteMedia()
   {
     return property_exists($this, 'forceDeleteMedia') ? $this->forceDeleteMedia : false;
+  }
+
+  abstract function getImageName();
+
+  public function getImageData()
+  {
+    $name = $this->getImageName();
+    if ($this->$name) {
+      $folder = Folder::find($this->$name->folder_id);
+      return [
+        'id' => $this->$name->id,
+        'name'  => $this->$name->name,
+        'url'   => $this->$name->getUrl($folder),
+        'thumb' => $this->$name->getUrl($folder, 'thumb'),
+        'folder_id' => $this->$name->folder_id,
+        'created_at' => $this->$name->created_at,
+      ];
+    }
+    return null;
+  }
+
+  public function deleteFileInTemp($media_id)
+  {
+    DB::table('media__media_temps')
+      ->where('media_id', $media_id)
+      ->where('session_id', session()->get('session_id'))
+      ->delete();
   }
 }

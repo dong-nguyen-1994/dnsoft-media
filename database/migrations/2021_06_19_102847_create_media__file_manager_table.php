@@ -23,6 +23,8 @@ class CreateMediaFileManagerTable extends Migration
             $table->string('mime_type')->nullable();
             $table->unsignedBigInteger('size')->nullable();
             $table->string('group')->nullable();
+            $table->string('origin_path')->nullable();
+            $table->string('thumbnail_path')->nullable();
             $table->timestamps();
         });
     }
