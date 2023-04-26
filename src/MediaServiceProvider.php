@@ -57,8 +57,12 @@ class MediaServiceProvider extends ServiceProvider
     ], 'config');
 
     $this->publishes([
-      __DIR__ . '/../public' => public_path('vendor/media'),
-    ], 'media');
+      __DIR__ . '/../public/v1' => public_path('vendor/media/v1'),
+    ], 'dnsoft-media-v1');
+
+    $this->publishes([
+      __DIR__ . '/../public/v2' => public_path('vendor/media/v2'),
+    ], 'dnsoft-media-v2');
 
     $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
 
@@ -132,6 +136,7 @@ class MediaServiceProvider extends ServiceProvider
     Blade::include("media::$version.admin.forms.single-file", 'singleFile');
     Blade::include("media::$version.admin.forms.single-image", 'singleImage');
     Blade::include("media::$version.admin.forms.media-v2", 'mediaV2');
+    Blade::include("media::v1.admin.forms.media-v1", 'mediaV1');
   }
 
   public function registerCommands()
