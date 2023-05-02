@@ -42,11 +42,6 @@ trait HasMediaTraitV3
     });
   }
 
-  //    public function initializeHasMediaTrait()
-  //    {
-  //        $this->with[] = 'media';
-  //    }
-
   /**
    * Get the "media" relationship.
    * @return MorphToMany
@@ -245,7 +240,6 @@ trait HasMediaTraitV3
    */
   protected function convertMediaString($media): array
   {
-    logger('MEDIA', [$media]);
     return json_decode($media, true);
   }
 

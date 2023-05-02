@@ -128,16 +128,11 @@ class MediaUploader
     if ($selectedFolder) {
       $media->folder_id = $selectedFolder->id;
     }
-
     if ($auth = $this->getAuthor()) {
       $media->author()->associate($auth);
     }
-
     $media->forceFill($this->attributes);
-
     $media->save();
-
-    logger($media->getDirectory($selectedFolder->name));
     $media->filesystem()->putFileAs(
       $media->getDirectory($selectedFolder->name),
       $this->file,
@@ -146,7 +141,6 @@ class MediaUploader
         'visibility' => 'public',
       ]
     );
-
     event(new MediaUploadedEvent($media, $selectedFolder));
 
     return $media->fresh();
@@ -155,7 +149,6 @@ class MediaUploader
   protected function getAuthor()
   {
     $guard = config('media.guard');
-
     return \Auth::guard($guard)->user();
   }
 }
