@@ -6,9 +6,8 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use DnSoft\Media\Jobs\PerformConversions;
 use DnSoft\Media\MediaGroup;
-use DnSoft\Media\Models\Folder;
 use DnSoft\Media\Models\Media;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 /**
  * Trait HasMediaTrait
@@ -17,14 +16,14 @@ use Illuminate\Support\Facades\DB;
  *
  * @property boolean $forceDeleteMedia
  */
-trait HasMediaTraitV2
+trait HasMediaTraitV3
 {
   /** @var MediaGroup[] */
   protected $mediaGroups = [];
 
   protected $mediaAttributes = [];
 
-  protected static function bootHasMediaTraitV2()
+  protected static function bootHasMediaTraitV3()
   {
     static::deleting(function (self $model) {
       if ($model->forceDeleteMedia()) {
@@ -37,15 +36,16 @@ trait HasMediaTraitV2
     });
 
     static::saved(function (self $model) {
-      $mediaIdsTmp = DB::table('media__media_temps')->where([
-        'session_id' => session()->get('session_id'),
-      ])->pluck('media_id')->toArray();
-      $medias = Media::whereIn('id', $mediaIdsTmp)->get();
-      foreach ($medias as $media) {
-        $model->syncMedia($media);
+      foreach ($model->mediaAttributes as $key => $value) {
+        $model->syncMedia($value, $key);
       }
     });
   }
+
+  //    public function initializeHasMediaTrait()
+  //    {
+  //        $this->with[] = 'media';
+  //    }
 
   /**
    * Get the "media" relationship.
@@ -155,9 +155,8 @@ trait HasMediaTraitV2
    */
   public function syncMedia($media, string $group = 'default', array $conversions = [])
   {
-    // $this->clearMediaGroup($group);
+    $this->clearMediaGroup($group);
     $this->attachMedia($media, $group, $conversions);
-    $this->deleteFileInTemp($media->id);
   }
 
   /**
@@ -206,6 +205,9 @@ trait HasMediaTraitV2
    */
   protected function parseMediaIds($media)
   {
+    if (is_string($media)) {
+      return $this->convertMediaString($media);
+    }
     if ($media instanceof Collection) {
       return $media->modelKeys();
     }
@@ -236,49 +238,64 @@ trait HasMediaTraitV2
     return property_exists($this, 'forceDeleteMedia') ? $this->forceDeleteMedia : false;
   }
 
-  abstract function getImageName();
+  /**
+   * Convert string media to array
+   * @param string
+   * @return array
+   */
+  protected function convertMediaString($media): array
+  {
+    logger('MEDIA', [$media]);
+    return json_decode($media, true);
+  }
 
+  /**
+   * Get media conversion
+   * @return string
+   */
+  abstract function getMediaConversion();
+
+  /**
+   * Get gallery data
+   */
+  public function getGalleryData()
+  {
+    $gallery = $this->getMedia($this->getMediaConversion());
+    $arrImage = []; $ids = [];
+    foreach ($gallery as $media) {
+      $folder = $media->folder;
+      $arrImage[] = [
+        'id' => $media->id,
+        'name'  => $media->name,
+        'url'   => $media->getUrl($folder),
+        'thumb' => $media->getUrl($folder, 'thumb'),
+        'folder_id' => $media->folder_id,
+        'created_at' => $media->created_at,
+      ];
+      $ids[] = $media->id;
+    }
+    return [
+      'medias' => $arrImage,
+      'ids' => $ids
+    ];
+  }
+
+  /**
+   * Get single file image
+   */
   public function getImageData()
   {
-    $name = $this->getImageName();
-    if ($this->$name && isset($this->$name->folder_id)) {
-      $folder = Folder::find($this->$name->folder_id);
+    $file = $this->getFirstMedia($this->getMediaConversion());
+    if ($file) {
       return [
-        'id' => $this->$name->id,
-        'name'  => $this->$name->name,
-        'url'   => $this->$name->getUrl($folder),
-        'thumb' => $this->$name->getUrl($folder, 'thumb'),
-        'folder_id' => $this->$name->folder_id,
-        'created_at' => $this->$name->created_at,
+        'id' => $file->id,
+        'name'  => $file->name,
+        'url'   => $file->getUrl($file->folder),
+        'thumb' => $file->getUrl($file->folder, 'thumb'),
+        'folder_id' => $file->folder_id,
+        'created_at' => $file->created_at,
       ];
     }
     return null;
-  }
-
-  public function getGalleryData()
-  {
-    $name = $this->getImageName();
-    $gallery = $this->$name;
-    $arrImage = [];
-    foreach ($gallery as $image) {
-      $folder = $image->folder;
-      $arrImage[] = [
-        'id' => $image->id,
-        'name'  => $image->name,
-        'url'   => $image->getUrl($folder),
-        'thumb' => $image->getUrl($folder, 'thumb'),
-        'folder_id' => $image->folder_id,
-        'created_at' => $image->created_at,
-      ];
-    }
-    return $arrImage;
-  }
-
-  public function deleteFileInTemp($media_id)
-  {
-    DB::table('media__media_temps')
-      ->where('media_id', $media_id)
-      ->where('session_id', session()->get('session_id'))
-      ->delete();
   }
 }
