@@ -9,9 +9,9 @@
 <input type="hidden" name="{{ $name }}" id="image-{{ $id }}" value="{{ $value ? json_encode([$value['id']]) : null }}"/>
 
 @push('styles')
-  <link rel="stylesheet" type="text/css" href="{{ asset('vendor/build/assets/app.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ asset('vendor/dnsoft/v1/admin/build/assets/app.css') }}">
 @endpush
 
 @push('scripts')
-  <script src="{{ asset('vendor/build/assets/app.js') }}"></script>
+  <script src="{{ asset('vendor/dnsoft/v1/admin/build/assets/app.js') }}"></script>
 @endpush
