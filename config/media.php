@@ -50,5 +50,6 @@ return [
     'enable' => true,
     'server' => 'https://img.cdn2n.net',
     'quality' => 80,
-  ]
+  ],
+  'video_default' => asset('vendor/dnsoft/v1/admin/img/video-default.png'),
 ];

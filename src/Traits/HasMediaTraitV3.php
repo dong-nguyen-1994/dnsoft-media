@@ -97,7 +97,7 @@ trait HasMediaTraitV3
       return '';
     }
 
-    return $media->getUrl($conversion);
+    return $media->getUrl($media->folder()->first(), $conversion);
   }
 
   /**
