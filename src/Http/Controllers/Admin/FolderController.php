@@ -34,14 +34,23 @@ class FolderController extends Controller
         $folders = Cache::get('folder');
         $images = Cache::get('images');
       } else {
-        $images = Media::where('folder_id', null)->get();
+        $images = Media::where('folder_id', null);
+        if ($request->search !== 'null') {
+          $images = $images->where('name', 'like', '%' . $request->search . '%');
+        }
+        $images = $images->get();
+        logger('image', [$images]);
         Cache::put('images', $images);
         $folders = Folder::where('parent_id', null)->get();
         Cache::put('folder', $folders);
       }
       $selectedFolder = null;
     } else {
-      $images = Media::where('folder_id', $folderId)->get();
+      $images = Media::where('folder_id', $folderId);
+      if ($request->search) {
+        $images = $images->where('name', 'like', '%' . $request->search . '%');
+      }
+      $images = $images->get();
       /** @var Folder */
       $folder = Folder::find($folderId);
       $folders = $folder->subFolders()->get();
