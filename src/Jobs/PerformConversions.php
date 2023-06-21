@@ -3,17 +3,15 @@
 namespace DnSoft\Media\Jobs;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use DnSoft\Media\ImageManipulator;
 use DnSoft\Media\Models\Folder;
 use DnSoft\Media\Models\Media;
 
-class PerformConversions implements ShouldQueue
+class PerformConversions
 {
-  use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+  use Dispatchable, Queueable, SerializesModels;
 
   /** @var Media */
   protected $media;

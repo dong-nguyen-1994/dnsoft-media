@@ -12,6 +12,7 @@ use DnSoft\Core\Events\CoreAdminMenuRegistered;
 use DnSoft\Media\Console\Commands\DeleteTempFile;
 use DnSoft\Media\Events\MediaUploadedEvent;
 use DnSoft\Media\Facades\Conversion;
+use DnSoft\Media\Interface\FolderInterface;
 use DnSoft\Media\Jobs\PerformConversions;
 use DnSoft\Media\Models\Media;
 use DnSoft\Media\Models\Mediable;
@@ -21,6 +22,7 @@ use DnSoft\Media\Repositories\MediableRepositoryInterace;
 use DnSoft\Media\Repositories\MediaRepository;
 use DnSoft\Media\Repositories\MediaRepositoryInterface;
 use DnSoft\Media\Repositories\MediaTagRepositoryInterface;
+use DnSoft\Media\Services\FolderService;
 
 class MediaServiceProvider extends ServiceProvider
 {
@@ -48,6 +50,8 @@ class MediaServiceProvider extends ServiceProvider
     $this->app->singleton(MediaTagRepositoryInterface::class, function () {
       return new MediaRepository(new MediaTag());
     });
+
+    $this->app->singleton(FolderInterface::class, FolderService::class);
   }
 
   public function boot()

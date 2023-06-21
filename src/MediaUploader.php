@@ -106,12 +106,7 @@ class MediaUploader
   public function upload(Folder $selectedFolder)
   {
     $model = config('media.model');
-    $isExisted = $model::where(['file_name' => $this->fileName]);
-    if ($selectedFolder) {
-      $isExisted = $isExisted->where('folder_id', $selectedFolder->id)->first();
-    } else {
-      $isExisted = $isExisted->first();
-    }
+    $isExisted = $model::where(['file_name' => $this->fileName, 'folder_id' => $selectedFolder ? $selectedFolder->id : null])->first();
     if ($isExisted) {
       return [$isExisted];
     }
@@ -121,7 +116,7 @@ class MediaUploader
 
     $media->name = $this->name;
     $media->file_name = $this->fileName;
-    $media->alt = $this->fileName;
+    $media->alt = $this->name;
     $media->disk = config('media.disk');
     $media->mime_type = $this->file->getMimeType();
     $media->size = $this->file->getSize();
