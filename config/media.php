@@ -27,7 +27,7 @@ return [
      * thumbsize = [width, height]
      * thumbsize = null
      */
-  'thumbsize' => [300, 300],
+  'thumbsize' => [320, 240],
 
   'validatorImage' => 'max:100000',
   'messageMax' => 'Max upload 100MB',

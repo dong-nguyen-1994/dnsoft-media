@@ -54,6 +54,7 @@ class Media extends Model
     'size',
     'folder_id',
     'alt',
+    'duration',
   ];
 
   protected static function boot()

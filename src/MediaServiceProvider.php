@@ -10,10 +10,12 @@ use Intervention\Image\Image;
 use DnSoft\Acl\Facades\Permission;
 use DnSoft\Core\Events\CoreAdminMenuRegistered;
 use DnSoft\Media\Console\Commands\DeleteTempFile;
+use DnSoft\Media\Events\GetVideoInformationEvent;
 use DnSoft\Media\Events\MediaUploadedEvent;
 use DnSoft\Media\Facades\Conversion;
 use DnSoft\Media\Interface\FolderInterface;
 use DnSoft\Media\Jobs\PerformConversions;
+use DnSoft\Media\Listeners\GetVideoInformationListener;
 use DnSoft\Media\Models\Media;
 use DnSoft\Media\Models\Mediable;
 use DnSoft\Media\Models\MediaTag;
@@ -102,6 +104,7 @@ class MediaServiceProvider extends ServiceProvider
           ['thumb']
         );
       });
+      Event::listen(GetVideoInformationEvent::class, GetVideoInformationListener::class);
     }
   }
 

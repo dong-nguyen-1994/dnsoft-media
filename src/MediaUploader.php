@@ -2,6 +2,7 @@
 
 namespace DnSoft\Media;
 
+use DnSoft\Media\Events\GetVideoInformationEvent;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
 use DnSoft\Media\Events\MediaUploadedEvent;
@@ -22,6 +23,9 @@ class MediaUploader
 
   /** @var array */
   protected $attributes = [];
+
+  /** @var array */
+  protected $types = ['video/mp4'];
 
   /**
    * Set the file to be uploaded.
@@ -137,6 +141,9 @@ class MediaUploader
       ]
     );
     event(new MediaUploadedEvent($media, $selectedFolder));
+    if (in_array($media->mime_type, $this->types)) {
+      event(new GetVideoInformationEvent($media));
+    }
 
     return $media->fresh();
   }
