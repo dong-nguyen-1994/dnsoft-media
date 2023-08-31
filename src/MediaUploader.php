@@ -25,7 +25,7 @@ class MediaUploader
   protected $attributes = [];
 
   /** @var array */
-  protected $types = ['video/mp4'];
+  protected $videoTypes = ['video/mp4'];
 
   /**
    * Set the file to be uploaded.
@@ -140,8 +140,9 @@ class MediaUploader
         'visibility' => 'public',
       ]
     );
+
     event(new MediaUploadedEvent($media, $selectedFolder));
-    if (in_array($media->mime_type, $this->types)) {
+    if (in_array($media->mime_type, $this->videoTypes)) {
       event(new GetVideoInformationEvent($media));
     }
 

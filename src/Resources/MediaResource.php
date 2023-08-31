@@ -18,8 +18,12 @@ class MediaResource extends JsonResource
       'created_at' => $this->created_at,
     ];
     $notShowImage = ['video/mp4'];
+    $imageTypes = ['image/png', 'image/jpeg'];
     if (!in_array($this->mime_type, $notShowImage)) {
       $response['thumb'] = $this->getUrl($folder, 'thumb');
+      if (!in_array($this->mime_type, $imageTypes)) {
+        $response['thumb'] = config('media.file_image');
+      }
     } else {
       $response['thumb'] = config('media.video_default');
     }

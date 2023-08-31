@@ -52,4 +52,5 @@ return [
     'quality' => 80,
   ],
   'video_default' => asset('vendor/dnsoft/v1/admin/img/video-default.png'),
+  'file_image' => asset('vendor/dnsoft/v1/admin/img/file-image.png'),
 ];

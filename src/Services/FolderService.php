@@ -5,20 +5,15 @@ namespace DnSoft\Media\Services;
 use DnSoft\Media\Interface\FolderInterface;
 use DnSoft\Media\Models\Folder;
 use DnSoft\Media\Models\Media;
-use Illuminate\Support\Facades\Cache;
 
 class FolderService implements FolderInterface
 {
-  public function handleGetList($folderId = 0, $breadcrumbsReq): array
+  /**
+   * Handle get list of image, folder and breadcrumbs
+   * @return array
+   */
+  public function handleGetList($folderId = 0, $breadcrumbsReq, $isFromBreadcumb): array
   {
-    if (!$breadcrumbsReq) {
-      $breadcrumbs = [
-        [
-          'id' => 0,
-          'name' => 'All media'
-        ]
-      ];
-    }
     $keyword = request('search');
     if ($folderId == 0) {
       $images = Media::where('folder_id', null);
@@ -41,25 +36,52 @@ class FolderService implements FolderInterface
       } else {
         $folders = $folder->subFolders()->get();
       }
-      if ($breadcrumbsReq) {
-        $breadcrumbsReq[] = [
-          'id' => $folder ? $folder->id : null,
-          'name' => $folder ? $folder->name : null,
-        ];
-        $breadcrumbs = $breadcrumbsReq;
-      } else {
-        $breadcrumbs[] = [
-          'id' => $folder ? $folder->id : null,
-          'name' => $folder ? $folder->name : null,
-        ];
-      }
       $selectedFolder = $folder;
     }
     return [
-      'breadcrumbs' => $breadcrumbs,
+      'breadcrumbs' => $this->handleGetBreadcrumbs($breadcrumbsReq, $selectedFolder, $isFromBreadcumb),
       'folders' => $folders,
       'images' => $images,
       'selectedFolder' => $selectedFolder,
     ];
+  }
+
+  /**
+   * Handle return breadcrumbs
+   */
+  private function handleGetBreadcrumbs($breadcrumbsReq, $selectedFolder, $isFromBreadcumb)
+  {
+    $breadcrumbs = [[
+      'id' => 0,
+      'name' => 'All media'
+    ]];
+    if (!$breadcrumbsReq) {
+      return $breadcrumbs;
+    }
+    if ($isFromBreadcumb) {
+      return $this->getBreadcrumbsFromBreadcrumb($breadcrumbsReq, $selectedFolder);
+    }
+    $breadcrumbsReq[] = [
+      'id' => $selectedFolder ? $selectedFolder->id : null,
+      'name' => $selectedFolder ? $selectedFolder->name : null,
+    ];
+    $breadcrumbs = $breadcrumbsReq;
+    return $breadcrumbs;
+  }
+
+  /**
+   * Handle get breadcrumb from breadcrumb
+   */
+  private function getBreadcrumbsFromBreadcrumb($breadcrumbsReq, $selectedFolder)
+  {
+    $breadcrumbs = [];
+    $folderId = $selectedFolder ? $selectedFolder->id : 0;
+    foreach ($breadcrumbsReq as $breadcrumbItem) {
+      $breadcrumbs[] = $breadcrumbItem;
+      if ($breadcrumbItem['id'] == $folderId) {
+        break;
+      }
+    }
+    return $breadcrumbs;
   }
 }

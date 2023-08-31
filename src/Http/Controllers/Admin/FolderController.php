@@ -19,6 +19,7 @@ class FolderController extends Controller
   {
     $this->folderInterface = $folderInterface;
   }
+
   /**
    * Get all parent folder
    */
@@ -26,9 +27,8 @@ class FolderController extends Controller
   {
     $folderId = $request->folder;
     $breadcrumbsReq = $request->breadcumbs;
-
-    $result = $this->folderInterface->handleGetList($folderId, $breadcrumbsReq);
-    
+    $isFromBreadcumb = $request->isFromBreadcumb;
+    $result = $this->folderInterface->handleGetList($folderId, $breadcrumbsReq, $isFromBreadcumb);
     return response()->json([
       'breadcrumbs' => $result['breadcrumbs'],
       'folders' => $result['folders'],

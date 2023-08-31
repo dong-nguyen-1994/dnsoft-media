@@ -4,5 +4,5 @@ namespace DnSoft\Media\Interface;
 
 interface FolderInterface
 {
-  public function handleGetList(int $folderId, string $breadcrumbs): array;  
+  public function handleGetList(int $folderId, string $breadcrumbs, $isFromBreadcumb): array;  
 }
