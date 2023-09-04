@@ -153,8 +153,6 @@ class Media extends Model
     }
     $arrFileName = explode('.', $this->file_name);
 
-    logger('ARR', $arrFileName);
-
     return $directory . '/' . $arrFileName[0].'.png';
   }
 
