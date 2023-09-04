@@ -3,6 +3,8 @@
   id="{{ $id }}"
   data-show="{{ isset($show_button) && $show_button }}"
   data-gallery="{{ $value ? json_encode($value['medias']) : null }}"
+  class="image-service-component-gallery"
+  data-label="{{ !empty($label) ? $label : config('media.label_default') }}"
 >
 </div>
 <input type="hidden" name="{{ $name }}" id="gallery-{{ $id }}" value="{{ $value ? json_encode($value['ids']) : null }}">

@@ -4,6 +4,7 @@
   data-show="{{ isset($show_button) && $show_button }}"
   data-thumbnail="{{ $value ? json_encode($value) : null }}"
   data-label="{{ !empty($label) ? $label : config('media.label_default') }}"
+  class="image-service-component"
 >
 </div>
 

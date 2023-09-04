@@ -23,6 +23,8 @@ trait HasMediaTraitV3
 
   protected $mediaAttributes = [];
 
+  protected $arrVideoFile = ['video/mp4'];
+
   protected static function bootHasMediaTraitV3()
   {
     static::deleting(function (self $model) {
@@ -262,7 +264,9 @@ trait HasMediaTraitV3
         'id' => $media->id,
         'name'  => $media->name,
         'url'   => $media->getUrl($folder),
-        'thumb' => $media->getUrl($folder, 'thumb'),
+        'thumb' => in_array($media->mime_type, $this->arrVideoFile) ?
+                   $media->getUrlThumbnailVideo($folder, 'thumb') :
+                   $media->getUrl($folder, 'thumb'),
         'folder_id' => $media->folder_id,
         'created_at' => $media->created_at,
       ];
@@ -285,7 +289,9 @@ trait HasMediaTraitV3
         'id' => $file->id,
         'name'  => $file->name,
         'url'   => $file->getUrl($file->folder),
-        'thumb' => $file->getUrl($file->folder, 'thumb'),
+        'thumb' => in_array($file->mime_type, $this->arrVideoFile) ?
+                   $file->getUrlThumbnailVideo($file->folder, 'thumb') :
+                   $file->getUrl($file->folder, 'thumb'),
         'folder_id' => $file->folder_id,
         'created_at' => $file->created_at,
       ];

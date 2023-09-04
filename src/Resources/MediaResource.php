@@ -17,7 +17,7 @@ class MediaResource extends JsonResource
       'folder_id' => $this->folder_id,
       'created_at' => $this->created_at,
     ];
-    $notShowImage = ['video/mp4'];
+    $notShowImage = ['video/mp4', 'video/quicktime'];
     $imageTypes = ['image/png', 'image/jpeg'];
     if (!in_array($this->mime_type, $notShowImage)) {
       $response['thumb'] = $this->getUrl($folder, 'thumb');
