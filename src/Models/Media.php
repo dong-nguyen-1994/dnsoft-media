@@ -126,37 +126,6 @@ class Media extends Model
   }
 
   /**
-   * Get url thumbnail split from video
-   * @param Folder
-   * @param string
-   * @return string
-   */
-  public function getUrlThumbnailVideo(Folder $folder, string $conversion = '')
-  {
-    return $this->filesystem()->url(
-      $this->getThumbnailVideoPath($folder, $conversion)
-    );
-  }
-
-  /**
-   * Get path thumbnail from video
-   * @param Folder
-   * @param string
-   * @return string
-   */
-  public function getThumbnailVideoPath(Folder $selectedFolder, string $conversion = '')
-  {
-    $directory = $this->getDirectory($selectedFolder->name ?? null);
-
-    if ($conversion) {
-      $directory .= '/conversions/' . $conversion;
-    }
-    $arrFileName = explode('.', $this->file_name);
-
-    return $directory . '/' . $arrFileName[0].'.png';
-  }
-
-  /**
    * Get the full path to the file.
    *
    * @param  string  $conversion

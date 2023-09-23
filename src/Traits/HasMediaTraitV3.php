@@ -23,10 +23,6 @@ trait HasMediaTraitV3
 
   protected $mediaAttributes = [];
 
-  protected $arrVideoFile = ['video/mp4'];
-
-  protected $imageTypes = ['image/png', 'image/jpeg'];
-
   protected static function bootHasMediaTraitV3()
   {
     static::deleting(function (self $model) {
@@ -256,17 +252,17 @@ trait HasMediaTraitV3
   /**
    * Get gallery data
    */
-  public function getGalleryData($conversion = '')
+  public function getGalleryData()
   {
-    $gallery = $this->getMedia($conversion ?? $this->getMediaConversion());
+    $gallery = $this->getMedia($this->getMediaConversion());
     $arrImage = []; $ids = [];
     foreach ($gallery as $media) {
-      $thumb = $this->getThumbnail($media);
+      $folder = $media->folder;
       $arrImage[] = [
         'id' => $media->id,
         'name'  => $media->name,
-        'url'   => $media->getUrl($media->folder),
-        'thumb' => $thumb,
+        'url'   => $media->getUrl($folder),
+        'thumb' => $media->getUrl($folder, 'thumb'),
         'folder_id' => $media->folder_id,
         'created_at' => $media->created_at,
       ];
@@ -289,31 +285,11 @@ trait HasMediaTraitV3
         'id' => $file->id,
         'name'  => $file->name,
         'url'   => $file->getUrl($file->folder),
-        'thumb' => $this->getThumbnail($file),
+        'thumb' => $file->getUrl($file->folder, 'thumb'),
         'folder_id' => $file->folder_id,
         'created_at' => $file->created_at,
       ];
     }
     return null;
-  }
-
-  /**
-   * Get thumbnail of media and folder
-   * @param Media
-   * @param Folder
-   * @return string
-   */
-  private function getThumbnail($media)
-  {
-    $folder = $media->folder;
-    $thumb = '';
-    if (in_array($media->mime_type, $this->arrVideoFile)) {
-      $thumb = $media->getUrlThumbnailVideo($folder, 'thumb');
-    } elseif (!in_array($media->mime_type, $this->imageTypes)) {
-      $thumb = config('media.file_image');
-    } else {
-      $thumb = $media->getUrl($folder, 'thumb');
-    }
-    return $thumb;
   }
 }

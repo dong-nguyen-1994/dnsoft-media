@@ -6,6 +6,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Process;
 use DnSoft\Media\Events\GetVideoInformationEvent;
+use DnSoft\Media\Services\FileService;
 use Illuminate\Support\Facades\File;
 
 class GetVideoInformationListener implements ShouldQueue
@@ -21,15 +22,13 @@ class GetVideoInformationListener implements ShouldQueue
   public function handle(GetVideoInformationEvent $event)
   {
     $media = $event->media;
-    $path = $media->getFullPath($media->folder);
-    $cmd = "ffmpeg -i $path 2>&1 | grep Duration | awk '{print $2}' | tr -d ,";
-    $result = Process::forever()->run($cmd);
-    $output = $result->output();
-    if ($result->successful()) {
+    $duration = app(FileService::class)->getVideoDuration($media);
+    if ($duration) {
       $media->update([
-        'duration' => substr($output, 0, 8),
+        'duration' => $duration,
       ]);
     }
+    $path = $media->getFullPath($media->folder);
     $this->getFrameFromVideo($path);
   }
 
