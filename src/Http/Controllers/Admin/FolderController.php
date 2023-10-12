@@ -7,6 +7,7 @@ use DnSoft\Media\Models\Folder;
 use DnSoft\Media\Resources\MediaResource;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
@@ -57,6 +58,8 @@ class FolderController extends Controller
       $folderName = $folderObj->name . '/' . $folderName;
     }
     $item = Folder::create($data);
+    $item->author()->associate(Auth::guard('admin')->user());
+    $item->save();
     $path = storage_path("app/public/$folderName");
     File::makeDirectory($path, $mode = 0777, true, true);
     return response()->json($item);

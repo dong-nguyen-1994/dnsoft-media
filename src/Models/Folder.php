@@ -11,10 +11,17 @@ class Folder extends Model
   protected $fillable = [
     'name',
     'parent_id',
+    'author_type',
+    'author_id',
   ];
 
   public function subFolders()
   {
     return $this->hasMany(Folder::class, 'parent_id', 'id');
+  }
+
+  public function author(): \Illuminate\Database\Eloquent\Relations\MorphTo
+  {
+    return $this->morphTo();
   }
 }

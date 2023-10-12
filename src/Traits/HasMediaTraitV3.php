@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use DnSoft\Media\Jobs\PerformConversions;
 use DnSoft\Media\MediaGroup;
 use DnSoft\Media\Models\Media;
-use Illuminate\Support\Str;
+use DnSoft\Media\Resources\MediaResource;
 
 /**
  * Trait HasMediaTrait
@@ -252,20 +252,12 @@ trait HasMediaTraitV3
   /**
    * Get gallery data
    */
-  public function getGalleryData()
+  public function getGalleryData($conversion = null)
   {
-    $gallery = $this->getMedia($this->getMediaConversion());
+    $gallery = $this->getMedia($conversion ?? $this->getMediaConversion());
     $arrImage = []; $ids = [];
     foreach ($gallery as $media) {
-      $folder = $media->folder;
-      $arrImage[] = [
-        'id' => $media->id,
-        'name'  => $media->name,
-        'url'   => $media->getUrl($folder),
-        'thumb' => $media->getUrl($folder, 'thumb'),
-        'folder_id' => $media->folder_id,
-        'created_at' => $media->created_at,
-      ];
+      $arrImage[] = new MediaResource($media);
       $ids[] = $media->id;
     }
     return [
@@ -281,14 +273,7 @@ trait HasMediaTraitV3
   {
     $file = $this->getFirstMedia($this->getMediaConversion());
     if ($file) {
-      return [
-        'id' => $file->id,
-        'name'  => $file->name,
-        'url'   => $file->getUrl($file->folder),
-        'thumb' => $file->getUrl($file->folder, 'thumb'),
-        'folder_id' => $file->folder_id,
-        'created_at' => $file->created_at,
-      ];
+      return new MediaResource($file);
     }
     return null;
   }

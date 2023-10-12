@@ -23,6 +23,9 @@ class CreateMediasTable extends Migration
       $table->nullableMorphs('author');
       $table->unsignedBigInteger('folder_id')->nullable();
       $table->string('alt')->nullable();
+      $table->string('duration', 15)->nullable();
+
+      $table->foreign('folder_id')->references('id')->on('media__folders')->onDelete('CASCADE');
       $table->timestamps();
     });
   }

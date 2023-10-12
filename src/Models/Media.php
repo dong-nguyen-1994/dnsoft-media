@@ -118,7 +118,7 @@ class Media extends Model
    * @param  string  $conversion
    * @return mixed
    */
-  public function getUrl(Folder $folder, string $conversion = '')
+  public function getUrl(Folder $folder =null, string $conversion = '')
   {
     return $this->filesystem()->url(
       $this->getPath($folder, $conversion)
@@ -131,7 +131,7 @@ class Media extends Model
    * @param  string  $conversion
    * @return mixed
    */
-  public function getFullPath(Folder $folder, string $conversion = '')
+  public function getFullPath(Folder $folder = null, string $conversion = '')
   {
     return $this->filesystem()->path(
       $this->getPath($folder, $conversion)
@@ -144,9 +144,9 @@ class Media extends Model
    * @param  string  $conversion
    * @return string
    */
-  public function getPath(Folder $selectedFolder, string $conversion = '')
+  public function getPath(Folder $selectedFolder = null, string $conversion = '')
   {
-    $directory = $this->getDirectory($selectedFolder->name ?? null);
+    $directory = $this->getDirectory($selectedFolder ? $selectedFolder->name : null);
 
     if ($conversion) {
       $directory .= '/conversions/' . $conversion;

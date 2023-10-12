@@ -142,7 +142,7 @@ class MediaServiceProvider extends ServiceProvider
     Blade::include("media::$version.admin.forms.file-manager", 'fileManager');
     Blade::include("media::$version.admin.forms.single-file", 'singleFile');
     Blade::include("media::$version.admin.forms.single-image", 'singleImage');
-    Blade::include("media::$version.admin.forms.media-v2", 'mediaV2');
+    Blade::include("media::v2.admin.forms.media-v2", 'mediaV2');
     Blade::include("media::v1.admin.forms.media-v1", 'mediaV1');
     Blade::include("media::v1.admin.forms.gallery-v1", 'galleryV1');
   }

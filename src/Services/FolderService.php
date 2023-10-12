@@ -2,6 +2,7 @@
 
 namespace DnSoft\Media\Services;
 
+use DnSoft\Acl\Models\Admin;
 use DnSoft\Media\Interface\FolderInterface;
 use DnSoft\Media\Models\Folder;
 use DnSoft\Media\Models\Media;
@@ -15,16 +16,32 @@ class FolderService implements FolderInterface
   public function handleGetList($folderId = 0, $breadcrumbsReq, $isFromBreadcumb): array
   {
     $keyword = request('search');
+    $admin = auth('admin')->user();
     if ($folderId == 0) {
-      $images = Media::where('folder_id', null);
+      if (!$admin->is_admin) {
+        $images = Media::whereAuthorType(get_class(new Admin()))
+          ->whereAuthorId(auth('admin')->id())->where('folder_id', null);
+      } else {
+        $images = Media::where('folder_id', null);
+      }
       if ($keyword !== 'null') {
         $images = $images->where('name', 'like', '%' . $keyword . '%');
       }
       $images = $images->get();
-      $folders = Folder::where('parent_id', null)->get();
+      if (!$admin->is_admin) {
+        $folders = Folder::whereAuthorType(get_class(new Admin()))
+          ->whereAuthorId(auth('admin')->id())->where('parent_id', null)->get();
+      } else {
+        $folders = Folder::where('parent_id', null)->get();
+      }
       $selectedFolder = null;
     } else {
-      $images = Media::where('folder_id', $folderId);
+      if (!$admin->is_admin) {
+        $images = Media::whereAuthorType(get_class(new Admin()))
+          ->whereAuthorId(auth('admin')->id())->where('folder_id', $folderId);
+      } else {
+        $images = Media::where('folder_id', $folderId);
+      }
       if ($keyword !== 'null') {
         $images = $images->where('name', 'like', '%' . $keyword . '%');
       }
@@ -32,7 +49,12 @@ class FolderService implements FolderInterface
       /** @var Folder */
       $folder = Folder::find($folderId);
       if (!$folder) {
-        $folders = Folder::where('parent_id', null)->get();
+        if (!$admin->is_admin) {
+          $folders = Folder::whereAuthorType(get_class(new Admin()))
+            ->whereAuthorId(auth('admin')->id())->where('parent_id', null)->get();
+        } else {
+          $folders = Folder::where('parent_id', null)->get();
+        }
       } else {
         $folders = $folder->subFolders()->get();
       }
