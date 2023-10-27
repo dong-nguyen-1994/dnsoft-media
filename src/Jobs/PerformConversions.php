@@ -45,9 +45,9 @@ class PerformConversions
   public function handle()
   {
     app(ImageManipulator::class)->manipulate(
-      $this->media,
-      $this->selectedFolder,
-      $this->conversions
+      $this->getMedia(),
+      $this->getSelectedFolder(),
+      $this->getConversions()
     );
   }
 
@@ -61,5 +61,11 @@ class PerformConversions
   public function getConversions()
   {
     return $this->conversions;
+  }
+
+  /** @return Folder */
+  public function getSelectedFolder()
+  {
+    return $this->selectedFolder;
   }
 }

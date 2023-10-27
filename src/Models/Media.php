@@ -55,6 +55,14 @@ class Media extends Model
     'folder_id',
     'alt',
     'duration',
+    'processed_file',
+    'visibility',
+    'processing_percentage',
+    'processed',
+  ];
+
+  protected $casts = [
+    'processed' => 'boolean',
   ];
 
   protected static function boot()
@@ -153,6 +161,26 @@ class Media extends Model
     }
 
     return $directory . '/' . $this->file_name;
+  }
+
+  /**
+   * Get the path to the file on disk.
+   *
+   * @param  string  $conversion
+   * @return string
+   */
+  public function getM3u8Path()
+  {
+    $directory = $this->getDirectory($this->folder ? $this->folder->name : null);
+
+    return $directory . '/' . $this->processed_file;
+  }
+
+  public function getM3u8Url()
+  {
+    return $this->filesystem()->url(
+      $this->getM3u8Path()
+    );
   }
 
   /**

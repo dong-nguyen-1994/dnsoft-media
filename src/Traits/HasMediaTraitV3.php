@@ -269,9 +269,9 @@ trait HasMediaTraitV3
   /**
    * Get single file image
    */
-  public function getImageData()
+  public function getImageData($conversion = null)
   {
-    $file = $this->getFirstMedia($this->getMediaConversion());
+    $file = $this->getFirstMedia($conversion ?? $this->getMediaConversion());
     if ($file) {
       return new MediaResource($file);
     }

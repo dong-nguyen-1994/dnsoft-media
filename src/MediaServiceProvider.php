@@ -5,15 +5,16 @@ namespace DnSoft\Media;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\ServiceProvider;
 use Intervention\Image\Image;
 use DnSoft\Acl\Facades\Permission;
 use DnSoft\Core\Events\CoreAdminMenuRegistered;
-use DnSoft\Media\Console\Commands\DeleteTempFile;
+use DnSoft\Core\Support\BaseModuleServiceProvider;
+use DnSoft\Media\Console\Commands\VideoEncode;
 use DnSoft\Media\Events\GetVideoInformationEvent;
 use DnSoft\Media\Events\MediaUploadedEvent;
 use DnSoft\Media\Facades\Conversion;
 use DnSoft\Media\Interface\FolderInterface;
+use DnSoft\Media\Jobs\HandleVideoUploaded;
 use DnSoft\Media\Jobs\PerformConversions;
 use DnSoft\Media\Listeners\GetVideoInformationListener;
 use DnSoft\Media\Models\Media;
@@ -26,14 +27,20 @@ use DnSoft\Media\Repositories\MediaRepositoryInterface;
 use DnSoft\Media\Repositories\MediaTagRepositoryInterface;
 use DnSoft\Media\Services\FolderService;
 
-class MediaServiceProvider extends ServiceProvider
+class MediaServiceProvider extends BaseModuleServiceProvider
 {
   protected $commandsCLI = [
-    DeleteTempFile::class
+    VideoEncode::class
   ];
+
+  public function getModuleNamespace()
+  {
+    return 'media';
+  }
 
   public function register()
   {
+    parent::register();
     $this->mergeConfigFrom(
       __DIR__ . '/../config/media.php',
       'media'
@@ -58,6 +65,7 @@ class MediaServiceProvider extends ServiceProvider
 
   public function boot()
   {
+    parent::boot();
     $this->publishes([
       __DIR__ . '/../config/media.php' => config_path('media.php'),
     ], 'config');
@@ -87,6 +95,8 @@ class MediaServiceProvider extends ServiceProvider
     $this->registerBlade();
 
     $this->registerCommands();
+
+    $this->registerEvents();
   }
 
   protected function registerDefaultConversion()
@@ -104,8 +114,18 @@ class MediaServiceProvider extends ServiceProvider
           ['thumb']
         );
       });
-      Event::listen(GetVideoInformationEvent::class, GetVideoInformationListener::class);
     }
+  }
+
+  protected function registerEvents()
+  {
+    Event::listen(GetVideoInformationEvent::class, GetVideoInformationListener::class);
+    Event::listen(GetVideoInformationEvent::class, function(GetVideoInformationEvent $event) {
+      $media = $event->media;
+      if ($media->type == 'video' && !$media->processed) {
+        HandleVideoUploaded::dispatch($media);
+      }
+    });
   }
 
   protected function loadRoutes()
@@ -114,10 +134,8 @@ class MediaServiceProvider extends ServiceProvider
       ->prefix('admin')
       ->group(__DIR__ . '/../routes/admin.php');
 
-    //        Route::middleware(['web'])
-    //            ->group(__DIR__.'/../routes/web.php');
-
-    //        Route::middleware(['web'])->group('./../routes/web.php');
+    Route::middleware(['web'])
+        ->group(__DIR__.'/../routes/web.php');
   }
 
   protected function registerPermissions()
