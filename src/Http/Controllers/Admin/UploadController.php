@@ -24,10 +24,13 @@ class UploadController extends Controller
 
   public function __invoke(Request $request)
   {
+    $request->validate([
+      'file' => 'required|file|max:204800', // 204800 represents 200 MB; you can adjust it as needed
+    ]);
     $medias = new Collection();
     $file = $request->file('file');
-    $selectedFolder = json_decode($request->selectedFolder);
-    $folderObj = $this->castToFolder($selectedFolder);
+    $selectedFolder = $request->selectedFolder;
+    $folderObj = Folder::find($selectedFolder);
     $fileExisted = false;
     if (is_array($file)) {
       foreach ($file as $item) {
@@ -81,17 +84,5 @@ class UploadController extends Controller
   protected function handleUploadMedia(UploadedFile $item, Folder $folder)
   {
     return $this->mediaUploader->setFile($item)->upload($folder);
-  }
-
-  protected function castToFolder($object)
-  {
-    $folder = new Folder();
-    if (!$object) {
-      return $folder; 
-    }
-    foreach($object as $property => $value) {
-      $folder->$property = $value;
-    }
-    return $folder;
   }
 }

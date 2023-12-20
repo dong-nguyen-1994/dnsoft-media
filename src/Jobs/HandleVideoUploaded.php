@@ -3,9 +3,7 @@
 namespace DnSoft\Media\Jobs;
 
 use DnSoft\Media\Models\Media;
-use DnSoft\Media\VideoManipulator;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -39,7 +37,9 @@ class HandleVideoUploaded implements ShouldQueue
   public function handle(): void
   {
     $mediaId = $this->getMedia()->id;
-    $cmd = "php artisan dnsoft:video-encode $mediaId";
-    Process::start($cmd);
+    if ($mediaId) {
+      $cmd = "php artisan dnsoft:video-encode $mediaId";
+      Process::start($cmd);
+    }
   }
 }

@@ -1,4 +1,4 @@
-@php($value = $item && method_exists($item, 'getImageData') ? $item->getImageData() : null)
+@php($value = $item && method_exists($item, 'getImageData') ? $item->getImageData($conversion ?? 'thumb') : null)
 <div
   id="{{ $id }}"
   data-show="{{ isset($show_button) && $show_button }}"

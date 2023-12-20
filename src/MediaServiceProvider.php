@@ -106,26 +106,26 @@ class MediaServiceProvider extends BaseModuleServiceProvider
       Conversion::register('thumb', function (Image $image) use ($thumbSize) {
         return $image->fit($thumbSize[0], $thumbSize[1]);
       });
-
-      Event::listen(MediaUploadedEvent::class, function (MediaUploadedEvent $event) {
-        PerformConversions::dispatch(
-          $event->media,
-          $event->selectedFolder,
-          ['thumb']
-        );
-      });
     }
   }
 
   protected function registerEvents()
   {
-    Event::listen(GetVideoInformationEvent::class, GetVideoInformationListener::class);
-    Event::listen(GetVideoInformationEvent::class, function(GetVideoInformationEvent $event) {
-      $media = $event->media;
-      if ($media->type == 'video' && !$media->processed) {
-        HandleVideoUploaded::dispatch($media);
-      }
+    Event::listen(MediaUploadedEvent::class, function (MediaUploadedEvent $event) {
+      PerformConversions::dispatch(
+        $event->media,
+        $event->selectedFolder,
+        ['thumb']
+      );
     });
+    Event::listen(GetVideoInformationEvent::class, GetVideoInformationListener::class);
+    Event::listen(GetVideoInformationEvent::class, HandleVideoUploaded::class);
+    // Event::listen(GetVideoInformationEvent::class, function(GetVideoInformationEvent $event) {
+    //   $media = $event->media;
+    //   if ($media->type == 'video' && !$media->processed) {
+    //     HandleVideoUploaded::dispatch($media);
+    //   }
+    // });
   }
 
   protected function loadRoutes()
