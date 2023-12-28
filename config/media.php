@@ -51,6 +51,6 @@ return [
     'server' => 'https://img.cdn2n.net',
     'quality' => 80,
   ],
-  'video_default' => asset('vendor/dnsoft/v1/admin/img/video-default.png'),
-  'file_image' => asset('vendor/dnsoft/v1/admin/img/file-image.png'),
+  'video_default' => asset('vendor/dnsoft/admin/img/video-default.png'),
+  'file_image' => asset('vendor/dnsoft/admin/img/file-image.png'),
 ];

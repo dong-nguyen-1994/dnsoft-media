@@ -71,12 +71,8 @@ class MediaServiceProvider extends BaseModuleServiceProvider
     ], 'config');
 
     $this->publishes([
-      __DIR__ . '/../public/v1' => public_path('vendor/media/v1'),
-    ], 'dnsoft-media-v1');
-
-    $this->publishes([
-      __DIR__ . '/../public/v2' => public_path('vendor/media/v2'),
-    ], 'dnsoft-media-v2');
+      __DIR__ . '/../public' => public_path('vendor/media'),
+    ], 'dnsoft-media');
 
     $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
 
@@ -155,14 +151,13 @@ class MediaServiceProvider extends BaseModuleServiceProvider
 
   public function registerBlade()
   {
-    $version = get_version_actived();
-    Blade::include("media::$version.admin.modals.tag-modal", 'modalMedia');
-    Blade::include("media::$version.admin.forms.file-manager", 'fileManager');
-    Blade::include("media::$version.admin.forms.single-file", 'singleFile');
-    Blade::include("media::$version.admin.forms.single-image", 'singleImage');
-    Blade::include("media::v2.admin.forms.media-v2", 'mediaV2');
-    Blade::include("media::v1.admin.forms.media-v1", 'mediaV1');
-    Blade::include("media::v1.admin.forms.gallery-v1", 'galleryV1');
+    
+    Blade::include("media::admin.modals.tag-modal", 'modalMedia');
+    Blade::include("media::admin.forms.file-manager", 'fileManager');
+    Blade::include("media::admin.forms.single-file", 'singleFile');
+    Blade::include("media::admin.forms.single-image", 'singleImage');
+    Blade::include("media::admin.forms.media", 'media');
+    Blade::include("media::admin.forms.gallery", 'gallery');
   }
 
   public function registerCommands()
